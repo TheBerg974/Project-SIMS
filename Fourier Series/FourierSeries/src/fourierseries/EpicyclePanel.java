@@ -6,12 +6,16 @@
 package fourierseries;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -19,18 +23,24 @@ import javafx.scene.shape.Circle;
  */
 public class EpicyclePanel extends Pane {
 
-    private Executor executor;
+    private ExecutorService executor;
     private Canvas canvas;
     private GraphicsContext gc;
-    private ArrayList<Epicycle> epicycles = new ArrayList<>();
-    private ArrayList<Point> points = new ArrayList<>();
-    private final boolean paused = true;
+    private ArrayList<Epicycle> epicycles;
+    private ArrayList<Point> points;
+    private boolean paused;
+    private Slider nCircles;
+    private Label nCirclesLabel;
+    private ComboBox wavePatterns;
 
     //Pane Constructor 
     public EpicyclePanel() {
         initializePane();
 
-        epicycles = TriangleWave(10);
+        
+        nCirclesLabel.setText(5 + " Epicycle(s)");
+
+        epicycles = SquareWave(5);
 
         epicycles.get(0).drawPhasor(gc);
         epicycles.get(0).drawEpicycle(gc);
@@ -41,10 +51,71 @@ public class EpicyclePanel extends Pane {
     //Initializing Pane(BackGround Color, GraphicsContext, Thread, Canvas)
     private void initializePane() {
         this.setStyle("-fx-background-color: black;");
-        executor = Executors.newFixedThreadPool(1000);
+
+        executor = Executors.newSingleThreadExecutor();
+
         canvas = new Canvas(1200, 450);
+
         gc = canvas.getGraphicsContext2D();
+
+        epicycles = new ArrayList<>();
+        points = new ArrayList<>();
+
+        paused = true;
+
+        wavePatterns = new ComboBox<String>();
+        wavePatterns.getItems().addAll(
+                "Square-Wave",
+                "Sawtooth-Wave",
+                "Triangle-Wave"
+        );
+        wavePatterns.setPromptText("Please select one");
+        wavePatterns.setValue("Square-Wave");
+        wavePatterns.setLayoutX(275);
+        wavePatterns.setLayoutY(350);
+        wavePatterns.valueProperty().addListener((arg0, arg1, arg2) -> {
+            paused = false;
+            epicycles.removeAll(epicycles);
+            points.removeAll(points);
+            epicycles = generateSeries(wavePatterns.getValue().toString(), (int)nCircles.getValue());
+            epicycles.get(0).drawPhasor(gc);
+            epicycles.get(0).drawEpicycle(gc);
+            paused = true;
+            loop();
+        });
+
+        nCirclesLabel = new Label();
+        nCirclesLabel.setTextFill(Color.WHITE);
+        nCirclesLabel.setLayoutX(175);
+        nCirclesLabel.setLayoutY(350);
+
+        nCircles = new Slider();
+        nCircles.setLayoutX(10);
+        nCircles.setLayoutY(350);
+        nCircles.setMin(1);
+        nCircles.setMax(10);
+        nCircles.setShowTickLabels(true);
+        nCircles.setShowTickMarks(true);
+        nCircles.setMinorTickCount(1);
+        nCircles.setBlockIncrement(1);
+
+        nCircles.valueProperty().addListener((ObservableValue<? extends Number> arg0, Number arg1, Number arg2) -> {
+            paused = false;
+            epicycles.removeAll(epicycles);
+            points.removeAll(points);
+            epicycles = generateSeries(wavePatterns.getValue().toString(), (int)nCircles.getValue());;
+            epicycles.get(0).drawPhasor(gc);
+            epicycles.get(0).drawEpicycle(gc);
+            nCirclesLabel.setText((int) nCircles.getValue() + " Epicycle(s)");
+            paused = true;
+            loop();
+        });
+
         this.getChildren().add(canvas);
+        this.getChildren().add(nCircles);
+        this.getChildren().add(nCirclesLabel);
+        this.getChildren().add(wavePatterns);
+
     }
 
     public void drawEpicycles(double dt) {
@@ -76,7 +147,7 @@ public class EpicyclePanel extends Pane {
                 Point previousPoint = points.get(i - 1);
                 points.get(i).translatePoint(gc);
                 points.get(i).drawPoint(gc);
-                if (i > 1) {
+                if (i > 1 && previousPoint.getY() > 0) {
                     points.get(i).connectPoint(gc, previousPoint);
                 }
             }
@@ -114,8 +185,9 @@ public class EpicyclePanel extends Pane {
     public ArrayList<Epicycle> SquareWave(int n) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
+        int j = 0;
         for (int i = 0; i < n; i++) {
-            int j = (i * 2) + 1;
+            j = (i * 2) + 1;
             double radius = 75 * (4 / (Math.PI * j));
             epicycles.add(new Epicycle(x, 200, radius, 0, j / 1000.0));
             x += radius;
@@ -131,20 +203,29 @@ public class EpicyclePanel extends Pane {
             epicycles.add(new Epicycle(x, 200, radius, 0, i / 1000.0));
             x += radius;
         }
-        System.out.println(epicycles.size());
         return epicycles;
     }
 
     public ArrayList<Epicycle> TriangleWave(int n) {
-                ArrayList<Epicycle> epicycles = new ArrayList<>();
+        ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         for (int i = 0; i < n; i++) {
             int j = (i * 2) + 1;
-            double radius = 75 * (8/Math.pow(Math.PI, 2)) * ((Math.pow(-1, (j-1)/2))/Math.pow(j, 2));
+            double radius = 75 * (8 / Math.pow(Math.PI, 2)) * ((Math.pow(-1, (j - 1) / 2)) / Math.pow(j, 2));
             epicycles.add(new Epicycle(x, 200, radius, 0, j / 500.0));
             x += radius;
         }
         return epicycles;
+    }
+    
+    public ArrayList<Epicycle> generateSeries(String type, int n) {
+        if(type.equals("Square-Wave")) {
+            return SquareWave(n);
+        } else if(type.equals("Sawtooth-Wave")) {
+            return SawtoothWave(n);
+        } else {
+            return TriangleWave(n);
+        }
     }
 
 }
