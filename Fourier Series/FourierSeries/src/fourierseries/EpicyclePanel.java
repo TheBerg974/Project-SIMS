@@ -30,20 +30,19 @@ public class EpicyclePanel extends Pane {
     private ArrayList<Point> points;
     private boolean paused;
     private Slider nCircles;
+    private Slider freqMult;
     private Label nCirclesLabel;
+    private Label freqLabel;
     private ComboBox wavePatterns;
 
     //Pane Constructor 
     public EpicyclePanel() {
         initializePane();
 
-        
         nCirclesLabel.setText(5 + " Epicycle(s)");
+        freqLabel.setText("Speed times " + (int)freqMult.getValue());
 
-        epicycles = SquareWave(5);
-
-        epicycles.get(0).drawPhasor(gc);
-        epicycles.get(0).drawEpicycle(gc);
+        epicycles = SquareWave(5, 1);
 
         loop();
     }
@@ -77,9 +76,7 @@ public class EpicyclePanel extends Pane {
             paused = false;
             epicycles.removeAll(epicycles);
             points.removeAll(points);
-            epicycles = generateSeries(wavePatterns.getValue().toString(), (int)nCircles.getValue());
-            epicycles.get(0).drawPhasor(gc);
-            epicycles.get(0).drawEpicycle(gc);
+            epicycles = generateSeries(wavePatterns.getValue().toString(), (int) nCircles.getValue(), (int)freqMult.getValue());
             paused = true;
             loop();
         });
@@ -88,25 +85,51 @@ public class EpicyclePanel extends Pane {
         nCirclesLabel.setTextFill(Color.WHITE);
         nCirclesLabel.setLayoutX(175);
         nCirclesLabel.setLayoutY(350);
+        
+        freqLabel = new Label();
+        freqLabel.setTextFill(Color.WHITE);
+        freqLabel.setLayoutX(175);
+        freqLabel.setLayoutY(400);
 
         nCircles = new Slider();
         nCircles.setLayoutX(10);
         nCircles.setLayoutY(350);
         nCircles.setMin(1);
-        nCircles.setMax(10);
+        nCircles.setMax(100);
         nCircles.setShowTickLabels(true);
         nCircles.setShowTickMarks(true);
         nCircles.setMinorTickCount(1);
         nCircles.setBlockIncrement(1);
+        nCircles.setValue(5);
+
+        freqMult = new Slider();
+        freqMult = new Slider();
+        freqMult.setLayoutX(10);
+        freqMult.setLayoutY(400);
+        freqMult.setMin(1);
+        freqMult.setMax(5);
+        freqMult.setShowTickLabels(true);
+        freqMult.setShowTickMarks(true);
+        freqMult.setMinorTickCount(1);
+        freqMult.setBlockIncrement(1);
+        freqMult.setValue(1);
 
         nCircles.valueProperty().addListener((ObservableValue<? extends Number> arg0, Number arg1, Number arg2) -> {
             paused = false;
             epicycles.removeAll(epicycles);
             points.removeAll(points);
-            epicycles = generateSeries(wavePatterns.getValue().toString(), (int)nCircles.getValue());;
-            epicycles.get(0).drawPhasor(gc);
-            epicycles.get(0).drawEpicycle(gc);
+            epicycles = generateSeries(wavePatterns.getValue().toString(), (int) nCircles.getValue(), (int)freqMult.getValue());
             nCirclesLabel.setText((int) nCircles.getValue() + " Epicycle(s)");
+            paused = true;
+            loop();
+        });
+
+        freqMult.valueProperty().addListener((ObservableValue<? extends Number> arg0, Number arg1, Number arg2) -> {
+            paused = false;
+            epicycles.removeAll(epicycles);
+            points.removeAll(points);
+            epicycles = generateSeries(wavePatterns.getValue().toString(), (int) nCircles.getValue(), (int)freqMult.getValue());
+            freqLabel.setText("Speed times " + (int)freqMult.getValue());
             paused = true;
             loop();
         });
@@ -115,7 +138,8 @@ public class EpicyclePanel extends Pane {
         this.getChildren().add(nCircles);
         this.getChildren().add(nCirclesLabel);
         this.getChildren().add(wavePatterns);
-
+        this.getChildren().add(freqMult);
+        this.getChildren().add(freqLabel);
     }
 
     public void drawEpicycles(double dt) {
@@ -123,6 +147,7 @@ public class EpicyclePanel extends Pane {
         for (int i = 0; i < epicycles.size(); i++) {
             epicycles.get(i).rotatePhasor(dt, gc);
             epicycles.get(i).drawEpicycle(gc);
+            epicycles.get(i).drawPhasor(gc);
         }
     }
 
@@ -168,7 +193,7 @@ public class EpicyclePanel extends Pane {
                 currentTime = System.nanoTime();
                 deltaTime = (currentTime - initialTime) / 1000000;
                 //Will update every 1/60 seconds (60 frames per second)
-                if (deltaTime >= 10) {
+                if (deltaTime >= 28.5) {
                     initialTime = currentTime;
                     clear(gc);
                     drawEpicycles(deltaTime);
@@ -182,49 +207,49 @@ public class EpicyclePanel extends Pane {
         gc.clearRect(0, 0, 1200, 450);
     }
 
-    public ArrayList<Epicycle> SquareWave(int n) {
+    public ArrayList<Epicycle> SquareWave(int n, int freqMult) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         int j = 0;
         for (int i = 0; i < n; i++) {
             j = (i * 2) + 1;
             double radius = 75 * (4 / (Math.PI * j));
-            epicycles.add(new Epicycle(x, 200, radius, 0, j / 1000.0));
+            epicycles.add(new Epicycle(x, 200, radius, 0, (j / 1000.0)*freqMult));
             x += radius;
         }
         return epicycles;
     }
 
-    public ArrayList<Epicycle> SawtoothWave(int n) {
+    public ArrayList<Epicycle> SawtoothWave(int n, int freqMult) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         for (int i = 1; i < n + 1; i++) {
             double radius = 75 * (4 / (Math.PI * i));
-            epicycles.add(new Epicycle(x, 200, radius, 0, i / 1000.0));
+            epicycles.add(new Epicycle(x, 200, radius, 0, (i / 1000.0)*freqMult));
             x += radius;
         }
         return epicycles;
     }
 
-    public ArrayList<Epicycle> TriangleWave(int n) {
+    public ArrayList<Epicycle> TriangleWave(int n, int freqMult) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         for (int i = 0; i < n; i++) {
             int j = (i * 2) + 1;
             double radius = 75 * (8 / Math.pow(Math.PI, 2)) * ((Math.pow(-1, (j - 1) / 2)) / Math.pow(j, 2));
-            epicycles.add(new Epicycle(x, 200, radius, 0, j / 500.0));
+            epicycles.add(new Epicycle(x, 200, radius, 0, (j / 500.0)*freqMult));
             x += radius;
         }
         return epicycles;
     }
-    
-    public ArrayList<Epicycle> generateSeries(String type, int n) {
-        if(type.equals("Square-Wave")) {
-            return SquareWave(n);
-        } else if(type.equals("Sawtooth-Wave")) {
-            return SawtoothWave(n);
+
+    public ArrayList<Epicycle> generateSeries(String type, int n, int freqMult) {
+        if (type.equals("Square-Wave")) {
+            return SquareWave(n, freqMult);
+        } else if (type.equals("Sawtooth-Wave")) {
+            return SawtoothWave(n, freqMult);
         } else {
-            return TriangleWave(n);
+            return TriangleWave(n, freqMult);
         }
     }
 

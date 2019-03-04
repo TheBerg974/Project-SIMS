@@ -42,8 +42,6 @@ public class Epicycle {
         double initialY = this.circle.getCenterY();
         double finalX = this.circle.getCenterX() + computePhasorX(this.theta);
         double finalY = this.circle.getCenterY() - computePhasorY(this.theta);
-        this.phasorX = finalX;
-        this.phasorY = finalY;
         gc.setStroke(Color.WHITE);
         gc.strokeLine(initialX, initialY, finalX, finalY);
     }
@@ -53,7 +51,6 @@ public class Epicycle {
         double frequency = this.getFrequency();
         double newTheta = this.theta + (dt * frequency);
         this.theta = newTheta;
-        this.drawPhasor(gc);
     }
 
     //Calculating x coordinate of the phasor
@@ -82,11 +79,11 @@ public class Epicycle {
     }
 
     public double getPhasorX() {
-        return phasorX;
+        return this.circle.getCenterX() + computePhasorX(this.theta);
     }
 
     public double getPhasorY() {
-        return phasorY;
+        return this.circle.getCenterY() - computePhasorY(this.theta);
     }
 
     public Circle getCircle() {
