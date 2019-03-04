@@ -143,9 +143,12 @@ public class EpicyclePanel extends Pane {
     }
 
     public void drawEpicycles(double dt) {
-        computeEpicyclePositions(epicycles);
+        
         for (int i = 0; i < epicycles.size(); i++) {
             epicycles.get(i).rotatePhasor(dt, gc);
+        }
+        computeEpicyclePositions(epicycles);
+        for (int i = 0; i < epicycles.size(); i++) {
             epicycles.get(i).drawEpicycle(gc);
             epicycles.get(i).drawPhasor(gc);
         }
