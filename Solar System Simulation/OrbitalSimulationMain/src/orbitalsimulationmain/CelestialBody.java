@@ -5,6 +5,7 @@
  */
 package orbitalsimulationmain;
 
+import javafx.scene.shape.Circle;
 /**
  *
  * @author Francesco
@@ -14,20 +15,18 @@ public class CelestialBody {
     protected double mass;
     protected double radius;
     protected double xCoordinate;
-    protected double yCoordinate;
-    protected double phaseShift;
-    protected double initialPhase;
-    protected double period;        
-            
-    public CelestialBody(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate, double phaseShift ,double initialPhase, double period) {
-        this.tangentialVelocity = tangentialVelocity;
-        this.mass = mass;
-        this.radius = radius;
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
-        this.initialPhase = initialPhase;
-        this.phaseShift = phaseShift;
-        this.period = period;
+    protected double yCoordinate;       
+    protected Circle circle;
+    
+    public CelestialBody(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
+//        this.tangentialVelocity = tangentialVelocity;
+//        this.mass = mass;
+//        this.radius = radius;
+
+        circle = new Circle(radius);  // radius      
+        circle.setCenterX(xCoordinate); // xCoordinate
+        circle.setCenterY(yCoordinate); // yCoordinate
+        circle.setFill(javafx.scene.paint.Color.RED);
     }
     
     //Getters and Setters
@@ -58,7 +57,11 @@ public class CelestialBody {
     public double getxCoordinate() {
         return xCoordinate;
     }
-
+    
+    public Circle getCircle(){
+        return circle;
+    }
+    
     public void setxCoordinate(double xCoordinate) {
         this.xCoordinate = xCoordinate;
     }
@@ -71,7 +74,7 @@ public class CelestialBody {
         this.yCoordinate = yCoordinate;
     }
     
-    public double applyOrbitEquationX(double oldPosition) {
+    /* public double applyOrbitEquationX(double oldPosition) {
         double newPosition = Math.acos((2*Math.PI*(phaseShift-initialPhase))/period);
         return newPosition;
     }
@@ -79,21 +82,22 @@ public class CelestialBody {
     public double applyOrbitEquationY(double oldPosition) {
         double newPosition = Math.asin((2*Math.PI*(phaseShift-initialPhase))/period);
         return newPosition;
-    }
+    } */
+    
     /*
     This method updates the x coordinate of the celestial body. 
     */
-    public double updatePositionX(CelestialBody cb) {
+    /* public double updatePositionX(CelestialBody cb) {
         double oldPositionX = cb.getxCoordinate();
         double newPositionX = applyOrbitEquationX(oldPositionX);  //ADD THE EQUATIONS FOR MOTION 
         return newPositionX;
-    }
+    } */
     /*
     This method updates the y coordinate of the celestial body. 
     */
-    public double updatePositionY(CelestialBody cb) {
+    /* public double updatePositionY(CelestialBody cb) {
         double oldPositionY = cb.getxCoordinate();
         double newPositionY = applyOrbitEquationY(oldPositionY);  //ADD THE EQUATIONS FOR MOTION  
         return newPositionY;
-    }
+    } */
 }
