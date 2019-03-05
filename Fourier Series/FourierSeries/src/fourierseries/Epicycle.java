@@ -32,7 +32,7 @@ public class Epicycle {
         double topX = this.circle.getCenterX() - this.circle.getRadius();
         double topY = this.circle.getCenterY() - this.circle.getRadius();
         double diameter = this.circle.getRadius() * 2;
-        gc.setStroke(Color.WHITE);
+        gc.setStroke(Color.rgb(200, 200, 200, 0.5));
         gc.strokeOval(topX, topY, diameter, diameter);
     }
 
