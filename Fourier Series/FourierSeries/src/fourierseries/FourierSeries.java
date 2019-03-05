@@ -21,7 +21,7 @@ public class FourierSeries extends Application {
         EpicyclePanel root = new EpicyclePanel();
 
         
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, 1200, 500);
         
         primaryStage.setTitle("FOURIER SERIES DEMONSTRATION");
         primaryStage.setScene(scene);
