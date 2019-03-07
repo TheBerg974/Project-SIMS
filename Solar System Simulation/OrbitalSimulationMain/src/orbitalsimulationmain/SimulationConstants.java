@@ -12,9 +12,13 @@ package orbitalsimulationmain;
 public interface SimulationConstants {
     
     /*
-    Represents the amount of times the game will refresh itself per second.
+    Represents the amount of times the game physics will refresh itself per second.
     */
-    int REFRESH_RATE = 100;
+    int REFRESH_RATE_PHYSICS = 100;
     
+    /*
+        Represents the amount of times the GUI will refresh itself per second.
+    */
+    int REFRESH_RATE_GUI = 60;
     
 }
