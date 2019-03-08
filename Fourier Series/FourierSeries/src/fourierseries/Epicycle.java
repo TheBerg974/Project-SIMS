@@ -6,7 +6,6 @@
 package fourierseries;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -18,7 +17,7 @@ public class Epicycle {
 
     //Epicycle class(circle, theta(phase), frequency, coordinate fo the phasor)
     private Circle circle;
-    private double theta, frequency, phasorX, phasorY;
+    private double theta, frequency;
 
     //Constructor
     public Epicycle(double centerX, double centerY, double radius, double theta, double frequency) {
@@ -48,8 +47,8 @@ public class Epicycle {
 
     //Computing all the rotating Phasors
     public void rotatePhasor(double dt, GraphicsContext gc) {
-        double frequency = this.getFrequency();
-        double newTheta = this.theta + (dt * frequency);
+        double freq = this.getFrequency();
+        double newTheta = this.theta + (dt * freq);
         this.theta = newTheta;
     }
 
