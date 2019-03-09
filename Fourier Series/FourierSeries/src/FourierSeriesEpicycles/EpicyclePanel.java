@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fourierseries;
+package FourierSeriesEpicycles;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -41,6 +42,8 @@ public class EpicyclePanel extends Pane {
     private ComboBox wavePatterns;
     private Image seriesImg;
     private ImageView imgView;
+    private Button backButton;
+    private Button canvasButton;
 
     //Pane Constructor 
     public EpicyclePanel() {
@@ -83,12 +86,14 @@ public class EpicyclePanel extends Pane {
         imgView.setFitWidth(500);
         imgView.setFitWidth(300);
 
-        nCircles = initializeSlider(10, 350, 1, 100, 1);
+        nCircles = initializeSlider(10, 350, 1, 250, 1);
         freqMult = initializeSlider(10, 400, 1, 5, 1);
         ampMult = initializeSlider(10, 450, 0.1, 1, 0.1);
         nCirclesLabel = initializeLabel(165, 350, ((int) nCircles.getValue() + " Epicycle(s)"), Color.WHITE);
         freqLabel = initializeLabel(165, 400, ("Speed times " + (int) freqMult.getValue()), Color.WHITE);
         ampLabel = initializeLabel(165, 450, ("Amplitude times " + ampMult.getValue()), Color.WHITE);
+        backButton = initializeButton(785, 355, "Back to Menu");
+        canvasButton = initializeButton(767, 410, "Canvas");
 
         nCircles.valueProperty().addListener((ObservableValue<? extends Number> arg0, Number arg1, Number arg2) -> {
             nCirclesLabel.setText((int) nCircles.getValue() + " Epicycle(s)");
@@ -109,8 +114,8 @@ public class EpicyclePanel extends Pane {
             resetEpycicles();
         });
 
-        this.getChildren().addAll(canvas, nCircles, nCirclesLabel, freqMult, freqLabel, 
-                ampMult, ampLabel, wavePatterns, imgView);
+        this.getChildren().addAll(canvas, nCircles, nCirclesLabel, freqMult, freqLabel,
+                ampMult, ampLabel, wavePatterns, imgView, backButton, canvasButton);
     }
 
     public void drawEpicycles(double dt) {
@@ -125,7 +130,7 @@ public class EpicyclePanel extends Pane {
         }
     }
 
-    public void computeEpicyclePositions(ArrayList<Epicycle> epicycles) {
+    private void computeEpicyclePositions(ArrayList<Epicycle> epicycles) {
         for (int i = 1; i < epicycles.size(); i++) {
             Epicycle previousEpi = epicycles.get(i - 1);
             Epicycle currentEpi = epicycles.get(i);
@@ -133,14 +138,14 @@ public class EpicyclePanel extends Pane {
         }
     }
 
-    public void drawPoints() {
+    private void drawPoints() {
         Epicycle epi = epicycles.get(epicycles.size() - 1);
         Point point = new Point(epi, gc);
         points.add(point);
         point.drawPoint(gc);
 
         for (int i = 1; i < points.size(); i++) {
-            if (points.get(i).getX() > 1200) {
+            if (points.get(i).getX() > 950) {
                 points.remove(i);
             } else {
                 Point previousPoint = points.get(i - 1);
@@ -181,7 +186,7 @@ public class EpicyclePanel extends Pane {
         gc.clearRect(0, 0, 1200, 450);
     }
 
-    public ArrayList<Epicycle> SquareWave(int n, int freqMult, double ampMult) {
+    private ArrayList<Epicycle> SquareWave(int n, int freqMult, double ampMult) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         int j = 0;
@@ -194,7 +199,7 @@ public class EpicyclePanel extends Pane {
         return epicycles;
     }
 
-    public ArrayList<Epicycle> SawtoothWave(int n, int freqMult, double ampMult) {
+    private ArrayList<Epicycle> SawtoothWave(int n, int freqMult, double ampMult) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         for (int i = 1; i < n + 1; i++) {
@@ -205,7 +210,7 @@ public class EpicyclePanel extends Pane {
         return epicycles;
     }
 
-    public ArrayList<Epicycle> TriangleWave(int n, int freqMult, double ampMult) {
+    private ArrayList<Epicycle> TriangleWave(int n, int freqMult, double ampMult) {
         ArrayList<Epicycle> epicycles = new ArrayList<>();
         int x = 200;
         for (int i = 0; i < n; i++) {
@@ -217,7 +222,7 @@ public class EpicyclePanel extends Pane {
         return epicycles;
     }
 
-    public ArrayList<Epicycle> generateSeries(String type, int n, int freqMult, double ampMult) {
+    private ArrayList<Epicycle> generateSeries(String type, int n, int freqMult, double ampMult) {
         if (type.equals("Square-Wave")) {
             return SquareWave(n, freqMult, ampMult);
         } else if (type.equals("Sawtooth-Wave")) {
@@ -227,7 +232,7 @@ public class EpicyclePanel extends Pane {
         }
     }
 
-    public Slider initializeSlider(double x, double y, double min, double max, double inc) {
+    private Slider initializeSlider(double x, double y, double min, double max, double inc) {
         Slider slider = new Slider();
         slider.setLayoutX(x);
         slider.setLayoutY(y);
@@ -241,7 +246,7 @@ public class EpicyclePanel extends Pane {
         return slider;
     }
 
-    public Label initializeLabel(double x, double y, String initialText, Color color) {
+    private Label initializeLabel(double x, double y, String initialText, Color color) {
         Label label = new Label();
         label.setTextFill(color);
         label.setLayoutX(x);
@@ -250,7 +255,16 @@ public class EpicyclePanel extends Pane {
         return label;
     }
 
-    public void resetEpycicles() {
+    private Button initializeButton(double x, double y, String s) {
+        Button button = new Button(s);
+        button.setScaleX(2);
+        button.setScaleY(1.5);
+        button.setLayoutX(x);
+        button.setLayoutY(y);
+        return button;
+    }
+
+    private void resetEpycicles() {
         paused = false;
         epicycles.removeAll(epicycles);
         points.removeAll(points);

@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fourierseries;
+package FourierSeriesCanvas;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -16,19 +15,20 @@ import javafx.stage.WindowEvent;
  *
  * @author berge
  */
-public class FourierSeries extends Application {
+public class CanvasTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
 
-        EpicyclePanel root = new EpicyclePanel();
+        CanvasPane root = new CanvasPane();
 
-        Scene scene = new Scene(root, 1200, 500);
+        Scene scene = new Scene(root, 950, 800);
 
-        primaryStage.setTitle("FOURIER SERIES DEMONSTRATION");
+        primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        
+        
         primaryStage.setOnCloseRequest((WindowEvent t) -> {
             Platform.exit();
             System.exit(0);
