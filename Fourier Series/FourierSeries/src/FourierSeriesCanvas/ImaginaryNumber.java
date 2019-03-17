@@ -5,6 +5,9 @@
  */
 package FourierSeriesCanvas;
 
+import java.util.ArrayList;
+import FourierSeriesEpicycles.Point;
+
 /**
  *
  * @author berge
@@ -24,11 +27,10 @@ public class ImaginaryNumber {
         this.imaginary += num.getImaginary();
     }
     
-    public void mult(ImaginaryNumber num) {
+    public ImaginaryNumber mult(ImaginaryNumber num) {
         double real = (this.real*num.getReal()) - (this.imaginary*num.getImaginary());
         double imaginary = (this.real*num.getImaginary()) +  (num.getReal()*this.imaginary);
-        this.real = real;
-        this.imaginary = imaginary;
+        return new ImaginaryNumber(real, imaginary);
     }
 
     public double getReal() {
@@ -45,6 +47,25 @@ public class ImaginaryNumber {
 
     public void setImaginary(double imaginary) {
         this.imaginary = imaginary;
+    }
+    
+    public static ArrayList<ImaginaryNumber> toImaginaryNumbers(ArrayList<Point> points) {
+        ArrayList<ImaginaryNumber> imaginaryNums = new ArrayList<>();
+        for(int i = 0; i < points.size(); i+=5) {
+            double x = points.get(i).getX();
+            double y = points.get(i).getY();
+            ImaginaryNumber tempNum = new ImaginaryNumber(x, y);
+            imaginaryNums.add(tempNum);
+        }
+        return imaginaryNums;
+    }
+    
+    public double getRadius() {
+        return Math.sqrt(this.real*this.real + this.imaginary* this.imaginary);
+    }
+    
+    public double getPhase() {
+        return Math.atan2(this.imaginary, this.real);
     }
     
     

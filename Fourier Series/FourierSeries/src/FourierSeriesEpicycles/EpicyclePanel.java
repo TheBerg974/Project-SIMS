@@ -86,7 +86,7 @@ public class EpicyclePanel extends Pane {
         imgView.setFitWidth(500);
         imgView.setFitWidth(300);
 
-        nCircles = initializeSlider(10, 350, 1, 250, 1);
+        nCircles = initializeSlider(10, 350, 1, 100, 1);
         freqMult = initializeSlider(10, 400, 1, 5, 1);
         ampMult = initializeSlider(10, 450, 0.1, 1, 0.1);
         nCirclesLabel = initializeLabel(165, 350, ((int) nCircles.getValue() + " Epicycle(s)"), Color.WHITE);
@@ -172,7 +172,7 @@ public class EpicyclePanel extends Pane {
                 currentTime = System.nanoTime();
                 deltaTime = (currentTime - initialTime) / 1000000;
                 //Will update every 1/60 seconds (60 frames per second)
-                if (deltaTime >= 33.2) {
+                if (deltaTime > 33.2) {
                     initialTime = currentTime;
                     clear(gc);
                     drawEpicycles(deltaTime);
