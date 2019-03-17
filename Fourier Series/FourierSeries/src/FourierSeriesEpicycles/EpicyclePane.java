@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -25,7 +27,7 @@ import javafx.scene.paint.Color;
  *
  * @author berge
  */
-public class EpicyclePanel extends Pane {
+public class EpicyclePane extends Pane {
 
     private ExecutorService executor;
     private Canvas canvas;
@@ -46,7 +48,7 @@ public class EpicyclePanel extends Pane {
     private Button canvasButton;
 
     //Pane Constructor 
-    public EpicyclePanel() {
+    public EpicyclePane() {
         initializePane();
         epicycles = SquareWave(1, 1, 1);
         loop();
@@ -112,6 +114,13 @@ public class EpicyclePanel extends Pane {
 
         wavePatterns.valueProperty().addListener((arg0, arg1, arg2) -> {
             resetEpycicles();
+        });
+
+        canvasButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                FourierSeries.changePane(new CanvasPane(), 975, 800);
+            }
         });
 
         this.getChildren().addAll(canvas, nCircles, nCirclesLabel, freqMult, freqLabel,

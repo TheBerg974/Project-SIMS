@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package FourierSeriesCanvas;
+package FourierSeriesEpicycles;
 
 import java.util.ArrayList;
 import FourierSeriesEpicycles.Point;
@@ -51,7 +51,7 @@ public class ImaginaryNumber {
     
     public static ArrayList<ImaginaryNumber> toImaginaryNumbers(ArrayList<Point> points) {
         ArrayList<ImaginaryNumber> imaginaryNums = new ArrayList<>();
-        for(int i = 0; i < points.size(); i+=5) {
+        for(int i = 0; i < points.size(); i+=20) {
             double x = points.get(i).getX();
             double y = points.get(i).getY();
             ImaginaryNumber tempNum = new ImaginaryNumber(x, y);
