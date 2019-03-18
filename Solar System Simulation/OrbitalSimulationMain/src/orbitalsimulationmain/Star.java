@@ -5,6 +5,8 @@
  */
 package orbitalsimulationmain;
 
+import javafx.scene.shape.Circle;
+
 /**
  *
  * @author cstuser
@@ -14,5 +16,53 @@ public class Star extends LargeBody{
     public Star(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
         super(tangentialVelocity, mass, radius, xCoordinate, yCoordinate);
     }
+
+	public double getTangentialVelocity() {
+		return tangentialVelocity;
+	}
+
+	public void setTangentialVelocity(double tangentialVelocity) {
+		this.tangentialVelocity = tangentialVelocity;
+	}
+
+	public double getMass() {
+		return mass;
+	}
+
+	public void setMass(double mass) {
+		this.mass = mass;
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
+
+	public double getxCoordinate() {
+		return xCoordinate;
+	}
+
+	public void setxCoordinate(double xCoordinate) {
+		this.xCoordinate = xCoordinate;
+	}
+
+	public double getyCoordinate() {
+		return yCoordinate;
+	}
+
+	public void setyCoordinate(double yCoordinate) {
+		this.yCoordinate = yCoordinate;
+	}
+
+	public Circle getCircle() {
+		return circle;
+	}
+
+	public void setCircle(Circle circle) {
+		this.circle = circle;
+	}
     
 }

@@ -21,4 +21,8 @@ public interface SimulationConstants {
     */
     int REFRESH_RATE_GUI = 60;
     
+	/*
+	Gravitational Constant, also known as 'G', in Newton's Law of Gravitation
+	*/
+	double UNIV_GRAV_CONSTANT = 6.64 * Math.pow(10,-11);
 }

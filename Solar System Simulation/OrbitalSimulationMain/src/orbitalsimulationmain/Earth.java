@@ -9,12 +9,12 @@ import javafx.scene.shape.Circle;
 
 /**
  *
- * @author cstuser
+ * @author Frankie
  */
-public class Planet extends CelestialBody {
-    
-	public Planet(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
-		super(tangentialVelocity, mass, radius, xCoordinate, yCoordinate);
+public class Earth extends Planet{
+	
+	public Earth(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
+		super(tangentialVelocity, 1/330000, radius, xCoordinate, yCoordinate);
 	}
 
 	public double getTangentialVelocity() {
@@ -64,5 +64,5 @@ public class Planet extends CelestialBody {
 	public void setCircle(Circle circle) {
 		this.circle = circle;
 	}
-    
+	
 }

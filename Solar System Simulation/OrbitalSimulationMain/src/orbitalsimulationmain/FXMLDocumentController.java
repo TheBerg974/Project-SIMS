@@ -159,18 +159,21 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        objectArrayList.add(checkBoxPlanet);
+        //Adds Planet, Star and Asteroid checkboxes to ArrayList
+		objectArrayList.add(checkBoxPlanet);
         objectArrayList.add(checkBoxStar);
         objectArrayList.add(checkBoxAsteroid);
 
-        presetArrayList.add(checkBoxEarth);
+        //Adds Earth, Sun, and Phi Orionis presets checkboxes to ArrayList
+		presetArrayList.add(checkBoxEarth);
         presetArrayList.add(checkBoxSun);
         presetArrayList.add(checkBoxPhiOrionis);
 
         textfieldArrayList.add(textFieldMass);
         textfieldArrayList.add(textFieldRadius);
         textfieldArrayList.add(textFieldVelocity);
-
+		
+		
         Circle c = new Circle(200, 200, 20);
         addToPane(c);
         // LOAD SHIT
