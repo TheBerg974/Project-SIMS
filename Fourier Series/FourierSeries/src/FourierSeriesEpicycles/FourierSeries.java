@@ -8,6 +8,7 @@ package FourierSeriesEpicycles;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -17,18 +18,22 @@ import javafx.stage.WindowEvent;
  */
 public class FourierSeries extends Application {
 
+    private static Scene scene;
+    private static Stage window;
+
     @Override
     public void start(Stage primaryStage) {
+        window = primaryStage;
+        
+        Pane root = new EpicyclePane();
 
-        EpicyclePanel root = new EpicyclePanel();
+        scene = new Scene(root, 950, 500);
 
-        Scene scene = new Scene(root, 950, 500);
+        window.setTitle("FOURIER SERIES DEMONSTRATION");
+        window.setScene(scene);
+        window.show();
 
-        primaryStage.setTitle("FOURIER SERIES DEMONSTRATION");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        primaryStage.setOnCloseRequest((WindowEvent t) -> {
+        window.setOnCloseRequest((WindowEvent t) -> {
             Platform.exit();
             System.exit(0);
         });
@@ -40,6 +45,14 @@ public class FourierSeries extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void changePane(Pane p, double width, double height) {
+        scene = new Scene(p, width, height);
+        window.setScene(scene);
+        p.requestFocus();
+        window.show();
+        System.out.println("Called");
     }
 
 }

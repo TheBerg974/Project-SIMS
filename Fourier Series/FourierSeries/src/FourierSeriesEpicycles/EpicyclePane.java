@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -25,7 +27,7 @@ import javafx.scene.paint.Color;
  *
  * @author berge
  */
-public class EpicyclePanel extends Pane {
+public class EpicyclePane extends Pane {
 
     private ExecutorService executor;
     private Canvas canvas;
@@ -46,7 +48,7 @@ public class EpicyclePanel extends Pane {
     private Button canvasButton;
 
     //Pane Constructor 
-    public EpicyclePanel() {
+    public EpicyclePane() {
         initializePane();
         epicycles = SquareWave(1, 1, 1);
         loop();
@@ -86,7 +88,7 @@ public class EpicyclePanel extends Pane {
         imgView.setFitWidth(500);
         imgView.setFitWidth(300);
 
-        nCircles = initializeSlider(10, 350, 1, 250, 1);
+        nCircles = initializeSlider(10, 350, 1, 100, 1);
         freqMult = initializeSlider(10, 400, 1, 5, 1);
         ampMult = initializeSlider(10, 450, 0.1, 1, 0.1);
         nCirclesLabel = initializeLabel(165, 350, ((int) nCircles.getValue() + " Epicycle(s)"), Color.WHITE);
@@ -112,6 +114,13 @@ public class EpicyclePanel extends Pane {
 
         wavePatterns.valueProperty().addListener((arg0, arg1, arg2) -> {
             resetEpycicles();
+        });
+
+        canvasButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                FourierSeries.changePane(new CanvasPane(), 975, 800);
+            }
         });
 
         this.getChildren().addAll(canvas, nCircles, nCirclesLabel, freqMult, freqLabel,
@@ -172,7 +181,7 @@ public class EpicyclePanel extends Pane {
                 currentTime = System.nanoTime();
                 deltaTime = (currentTime - initialTime) / 1000000;
                 //Will update every 1/60 seconds (60 frames per second)
-                if (deltaTime >= 33.2) {
+                if (deltaTime > 33.2) {
                     initialTime = currentTime;
                     clear(gc);
                     drawEpicycles(deltaTime);
