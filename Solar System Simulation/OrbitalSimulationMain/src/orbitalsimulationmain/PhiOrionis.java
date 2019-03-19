@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
 public class PhiOrionis extends Star{
     
     public PhiOrionis(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
-        super(tangentialVelocity, 18, radius, xCoordinate, yCoordinate);
+        super(tangentialVelocity, 15, 63, xCoordinate, yCoordinate);
     }
 
 	public double getTangentialVelocity() {

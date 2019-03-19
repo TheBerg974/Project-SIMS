@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
 public class Sun extends Star{
     
     public Sun(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
-        super(tangentialVelocity, 1, radius, xCoordinate, yCoordinate);
+        super(tangentialVelocity, 1, 10, xCoordinate, yCoordinate);
     }
 
 	public double getTangentialVelocity() {

@@ -14,13 +14,22 @@ public class Vector2D {
     
     private double x;
     private double y;
-
-    public Vector2D(double x, double y) {
+    private double angle; 
+    public Vector2D(double x, double y, double angle) {
         this.x = x;
         this.y = y;
+        this.angle = angle;
     }
     
     //Getters and setters
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+    
     public double getX(){ 
         return x; 
     }
@@ -37,15 +46,15 @@ public class Vector2D {
     
     //addition of 2 vectors
     public Vector2D add(Vector2D otherVector) {
-        return new Vector2D(x + otherVector.x, y + otherVector.y);
+        return new Vector2D(x + otherVector.x, y + otherVector.y, angle); //will adding 'angle' to this fuck it up?
     }
     //subtraction
     public Vector2D sub(Vector2D otherVector) {
-        return new Vector2D(x - otherVector.x, y - otherVector.y);
+        return new Vector2D(x - otherVector.x, y - otherVector.y, angle);
     }
     //multiplication
     public Vector2D mult(double scalar) {
-        return new Vector2D(x * scalar, y * scalar);
+        return new Vector2D(x * scalar, y * scalar, angle);
     }
     //dot product
     public double dot(Vector2D otherVector){
