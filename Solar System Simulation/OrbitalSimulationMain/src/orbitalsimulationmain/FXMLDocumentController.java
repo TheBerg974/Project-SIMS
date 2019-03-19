@@ -5,6 +5,7 @@
  */
 package orbitalsimulationmain;
 
+import CelestialBody.CelestialBody;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -32,7 +33,7 @@ public class FXMLDocumentController implements Initializable {
 
     ArrayList<TextField> textfieldArrayList = new ArrayList<>();
     
-    ArrayList<LargeBody> largeBodyArrayList = new ArrayList<>();
+    //ArrayList<LargeBody> largeBodyArrayList = new ArrayList<>();
 
     boolean selected = false;
 
@@ -114,10 +115,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleMouseClickAction(MouseEvent me) {
         //CelestialBody cb = new CelestialBody(handleTextFieldVelocityAction(ae),handleTextFieldMassAction(ae),handleTextFieldRadiusAction(ae),me.getSceneX(),me.getSceneY());
-        CelestialBody cb = new CelestialBody(0, mass, radius, me.getSceneX(), me.getSceneY());
-        addToPane(cb.getCircle());
+        CelestialBody cb = new CelestialBody(new Vector2D(15,15), mass, radius, new Vector2D(me.getSceneX(), me.getSceneY()));
+        addToPane(cb);
         if (me.getSceneY() > 700) {
-            removeFromPane(cb.getCircle());
+            removeFromPane(cb);
         } //this line SHOULD remove any circles below 700 pixels, but IT DOESN'T WORK
         
         //onClick, add a planet based on what the textfields and check marks say. Disable other checkboxes (arraylist)
@@ -142,31 +143,27 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void onCheckBoxAction(ActionEvent ae) {
         //iterates through the object type arraylist. Checks which check box is selected, then disables all other check boxes in the arraylist so they can't be added.
+        int counter = 0;
         for (CheckBox cbox : objectArrayList) {
             if (cbox.isSelected()) {
-                selected = !selected;
-            } else if (!cbox.isSelected()) {
+                //objectArrayList.remove(cbox);
+                
+            }
+            else if (!cbox.isSelected()) {
                 cbox.setDisable(true);
-            } else if (!cbox.isSelected() && selected == false) {
-                cbox.setDisable(false);
+                counter++;
             }
-        }
-        for (CheckBox cb : presetArrayList) {
-            if (cb.isSelected()) {
-                selected = !selected;
-                for (TextField tf : textfieldArrayList) {
-                    tf.setDisable(true);
+            
+            if(counter ==3) {
+                for(CheckBox cb: objectArrayList) {
+                    cb.setDisable(false);
                 }
             }
-            if (!cb.isSelected()) {
-                cb.setDisable(true);
-            } else if (!cb.isSelected() && selected == false) {
-                cb.setDisable(false);
-                for (TextField tf : textfieldArrayList) {
-                    tf.setDisable(false);
-                }
-            }            
+            
         }
+        //for (CheckBox cb : presetArrayList) {
+               
+        //}
     }
 
     @Override
@@ -186,58 +183,58 @@ public class FXMLDocumentController implements Initializable {
         textfieldArrayList.add(textFieldRadius);
         textfieldArrayList.add(textFieldVelocity);
         
-        for (CheckBox cb : objectArrayList) {
-            cb.requestFocus();
-            CelestialBody obj;
             //if any space object on the pane intersects any component, then delete that object
             
             //if (cb.getBoundsInLocal().intersects()){ 
-                
-            //}
-        }
+       
         
-        for (CheckBox cb : objectArrayList) {
-           cb.requestFocus();
-        }
         
-        for (TextField tf : textfieldArrayList) {
-           tf.requestFocus();
-        }
-	/*
-        //Positions of the CelestialBody
-        double bodyPosX = body.getxCoordinate();
-	double bodyPosY = body.getyCoordinate();
-        
-        //Instantiating a position and velocity vector for a CelestialBody
-        positionVector = new Vector2D(bodyPosX, bodyPosY, 0);
-        velocityVector = new Vector2D(0,0,0);
+        CelestialBody body1 = new CelestialBody(new Vector2D(0,100),30,10,new Vector2D(200,200));
+        CelestialBody body2 = new CelestialBody(new Vector2D(0,100),30,10,new Vector2D(350,350));
+        ArrayList<CelestialBody> cbArrayList = new ArrayList<>();
+        cbArrayList.add(body1);
+        cbArrayList.add(body2);        
         
         //Time value when simulation begins
         long initialTime = System.nanoTime();
-        Vector2D gravitationalForce = new Vector2D(122,122,0); //TODO!!!!!!
+        
+        addToPane(body1);
+        addToPane(body2);
         
         new AnimationTimer() {
             @Override
             public void handle(long instantTime) {
+
+                Vector2D gravitationalForce = SimulationPhysics.newtonsLaw(body1, body2);
+                
+                //SimulationPhysics.newtonsLaw(body1, body2);                 
                 //Calculates time values (current time, change in time, and the time value of the previous step)
                 double currentTime = (instantTime - initialTime) / 1000000000.0;
                 double deltaTime = currentTime - previousTimeStep;
                 previousTimeStep = currentTime;
                 
-                //Changing the velocity of the object in real-time using Euler's Method of Integration
-                Vector2D acceleration = gravitationalForce.mult(deltaTime);
-                velocityVector = velocityVector.add(acceleration);
-                positionVector = positionVector.add(velocityVector.mult(deltaTime));
-                
-                //The following code updates the position of the Celestial Bodies
-                body.setxCoordinate(positionVector.getX());
-                body.setyCoordinate(positionVector.getY());
+                for (CelestialBody celb : cbArrayList) {   
+                    Vector2D antiGravForce = gravitationalForce.mult(-1); //force in the opposite direction. To be applied on the other body so that they move towards each other
+                    
+                    Vector2D newTangentialVelocity = celb.getTangentialVelocity().add(gravitationalForce.mult(deltaTime));
+                    Vector2D newPosition = celb.getCoordinates().add(newTangentialVelocity.mult(deltaTime));
+                    
+                    celb.setCoordinates(newPosition);
+                    celb.setTangentialVelocity(newTangentialVelocity);
+                    
+                    celb.setCenterX(newPosition.getX());
+                    celb.setCenterY(newPosition.getY());
+                    
+                    System.out.println(newPosition.getX());
+                    System.out.println(newPosition.getY());
+                    //UI.getChildren().get(0)
+                }
             }   
         }.start();
-        */
-        Circle c = new Circle(200, 200, 20);
+
+        //Circle c = new Circle(200, 200, 20);
         
-        addToPane(c);
+       // addToPane(c);
         // LOAD SHIT
         //set background of region
     }
@@ -247,18 +244,20 @@ public class FXMLDocumentController implements Initializable {
     }
 
     public void removeFromPane(Node node) {
-        UI.getChildren().add(node);
+        UI.getChildren().remove(node);
     }
 }
 
 /*TODO FOR GUI: 
 
-1) UPDATE OBJECT TYPE AND CONSTRUCTOR BASED ON CHECKBOX PREFERENCES
+1)$###### UPDATE OBJECT TYPE AND CONSTRUCTOR BASED ON CHECKBOX PREFERENCES!!!!####
 2) LOGIC FOR ENABLING AND RE-ENABLING TEXTFIELDS AND CHECKBOXES
-    i) IF ALL CBOXES ARE UNCHECKED, THEN RE-ENABLE THEM ALL
+    i) (DONE)IF ALL CBOXES ARE UNCHECKED, THEN RE-ENABLE THEM ALL
     ii) IF A PRESET CHECKBOX IS CHOSEN, THE TEXTFIELDS ARE DISABLED
-3) MAKE CELESTIALBODY OBJECTS ADDABLE TO THE PANE (ONLY CIRCLES WORK, REFER TO INITIALIZE() METHOD FOR MORE INFO)
+    
+3)(DONE) MAKE CELESTIALBODY OBJECTS ADDABLE TO THE PANE (ONLY CIRCLES WORK, REFER TO INITIALIZE() METHOD FOR MORE INFO)
 *OPTIONAL* MAKE OBJECTS TRACE THEIR PATH WHEN MOVING ON-SCREEN
 4) ENSURE THAT OBJECTS CANNOT BE ADDED OVER THE BUTTONS, CHECKBOXES AND TEXTFIELDS. (PUT THEM OUT OF FOCUS)
-5) HOW TO MAKE IT SO THAT THERE'S NO NULLPOINTEREXCEPTION? SO THAT THE CELESTIALBODY OBJECT NAMED 'BODY' POINTS TO THE OBJECTS CREATED IN THE GUI?
+5) (DONE) HOW TO MAKE IT SO THAT THERE'S NO NULLPOINTEREXCEPTION? SO THAT THE CELESTIALBODY OBJECT NAMED 'BODY' POINTS TO THE OBJECTS CREATED IN THE GUI?
+6) MAKE THE MATH UPDATE MORE OFTEN THAN THE GUI (60 VS 30 FPS FOR EXAMPLE)
 */

@@ -5,6 +5,7 @@
  */
 package orbitalsimulationmain;
 
+import CelestialBody.CelestialBody;
 import javafx.scene.shape.Circle;
 
 /**
@@ -15,21 +16,25 @@ public class SimulationPhysics {
     /*
      This method applies Newton's law based on the interactions between two bodies, and gives the magnitude of the vector
      */
-    public double newtonsLaw(CelestialBody firstBody, CelestialBody otherBody) {
-        double distanceX = firstBody.getxCoordinate() - otherBody.getxCoordinate(); //x-coordinate distance between both bodies
-        double distanceY = firstBody.getyCoordinate() - otherBody.getyCoordinate(); //y-coordinate distance between both bodies
+    public static Vector2D newtonsLaw(CelestialBody firstBody, CelestialBody otherBody) {
+        double distanceX = firstBody.getCoordinates().getX() - otherBody.getCoordinates().getX(); //x-coordinate distance between both bodies
+        double distanceY = firstBody.getCoordinates().getY() - otherBody.getCoordinates().getY(); //y-coordinate distance between both bodies
         double distanceTotal = Math.hypot(distanceX, distanceY); //- firstBody.getRadius() - otherBody.getRadius(); //gets the total distance magnitude between the 2 circles
-        double angle = 3;
+        double angle = Math.atan2(distanceY, distanceX); //TODO
         double vectorMagnitude = (SimulationConstants.UNIV_GRAV_CONSTANT * firstBody.getMass() * otherBody.getMass())/Math.pow(distanceTotal,2); //Gm1m2/r^2
-        return vectorMagnitude; 
+        Vector2D gravAccel = new Vector2D(vectorMagnitude*Math.cos(angle), vectorMagnitude*Math.sin(angle));
+        System.out.println(gravAccel.getX());
+        System.out.println(gravAccel.getY());
+        return gravAccel; 
     }
     
     /*
     TO DO: 
-    1) find the direction that the force is pointing to for each body
-    2) apply on the body 1 (Euler's method)
-    3) apply opposite direction force on body 2 (E.M.)
+    1) (DONE) find the direction that the force is pointing to for each body
+    2) (DONE) apply on the body 1 (Euler's method) 
+    3) (DONE) apply opposite direction force on body 2 (E.M.) 
     4) 
     */
+    
         
 }

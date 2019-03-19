@@ -3,41 +3,40 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package orbitalsimulationmain;
+package CelestialBody;
 
 import javafx.scene.shape.Circle;
+import orbitalsimulationmain.Vector2D;
 /**
  *
  * @author Francesco
  */
-public class CelestialBody {
-    protected double tangentialVelocity;
+public class CelestialBody extends Circle{
+    protected Vector2D tangentialVelocity;
     protected double mass;
     protected double radius;
-    protected double xCoordinate;
-    protected double yCoordinate;       
-    protected Circle circle;
+    protected Vector2D coordinates;       
     
-    public CelestialBody(double tangentialVelocity, double mass, double radius, double xCoordinate, double yCoordinate) {
-//        this.tangentialVelocity = tangentialVelocity;
-//        this.mass = mass;
-//        this.radius = radius;
+    public CelestialBody(Vector2D tangentialVelocity, double mass, double radius, Vector2D coordinates) {
+        super(coordinates.getX(), coordinates.getY(), radius);
+        this.tangentialVelocity = tangentialVelocity;
+        this.mass = mass;
+        this.radius = radius;
 
-        circle = new Circle(radius);  // radius      
-        circle.setCenterX(xCoordinate); // xCoordinate
-        circle.setCenterY(yCoordinate); // yCoordinate
-        circle.setFill(javafx.scene.paint.Color.RED);
+        this.coordinates = coordinates; 
+        
     }
     
     //Getters and Setters
-    public double getTangentialVelocity() {
+
+    public Vector2D getTangentialVelocity() {
         return tangentialVelocity;
     }
 
-    public void setTangentialVelocity(double tangentialVelocity) {
+    public void setTangentialVelocity(Vector2D tangentialVelocity) {
         this.tangentialVelocity = tangentialVelocity;
     }
-
+    
     public double getMass() {
         return mass;
     }
@@ -45,33 +44,13 @@ public class CelestialBody {
     public void setMass(double mass) {
         this.mass = mass;
     }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
-    public double getxCoordinate() {
-        return xCoordinate;
-    }
     
-    public Circle getCircle(){
-        return circle;
-    }
-    
-    public void setxCoordinate(double xCoordinate) {
-        this.xCoordinate = xCoordinate;
+    public Vector2D getCoordinates() {
+        return coordinates;
     }
 
-    public double getyCoordinate() {
-        return yCoordinate;
-    }
-
-    public void setyCoordinate(double yCoordinate) {
-        this.yCoordinate = yCoordinate;
+    public void setCoordinates(Vector2D coordinates) {
+        this.coordinates = coordinates;
     }
     
     /* public double applyOrbitEquationX(double oldPosition) {
