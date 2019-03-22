@@ -141,7 +141,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void onCheckBoxAction(ActionEvent ae) {
+    private void onObjectCheckBoxAction(ActionEvent ae) {
         //iterates through the object type arraylist. Checks which check box is selected, then disables all other check boxes in the arraylist so they can't be added.
         int counter = 0;
         for (CheckBox cbox : objectArrayList) {
@@ -158,12 +158,35 @@ public class FXMLDocumentController implements Initializable {
                 for(CheckBox cb: objectArrayList) {
                     cb.setDisable(false);
                 }
-            }
-            
+            }   
         }
-        //for (CheckBox cb : presetArrayList) {
-               
-        //}
+    }
+    
+    @FXML
+    private void onPresetCheckBoxAction(ActionEvent ae) {
+        //iterates through the object type arraylist. Checks which check box is selected, then disables all other check boxes in the arraylist so they can't be added.
+        int counter = 0;
+        for (CheckBox cbox : presetArrayList) {
+            //if one preset checkbox is selected, disable all the textfields (they are not needed since the presets give values for their radius and mass)  
+            if (cbox.isSelected()) {
+                for (TextField tf : textfieldArrayList) {
+                    tf.setDisable(true);
+                }    
+            }
+            else if (!cbox.isSelected()) {
+                cbox.setDisable(true);
+                counter++;
+            }
+            //If all 3 checkboxes are unselected, re-enable them, and re-enable the textfields
+            if(counter ==3) {
+                for(CheckBox cb: presetArrayList) {
+                    cb.setDisable(false);                    
+                }
+                for (TextField tf : textfieldArrayList) {
+                    tf.setDisable(false);
+                } 
+            }
+        }
     }
 
     @Override
@@ -181,16 +204,13 @@ public class FXMLDocumentController implements Initializable {
         //Adds all the textfields to an ArrayList so they can be easily dealt with
         textfieldArrayList.add(textFieldMass);
         textfieldArrayList.add(textFieldRadius);
-        textfieldArrayList.add(textFieldVelocity);
         
-            //if any space object on the pane intersects any component, then delete that object
+        //if any space object on the pane intersects any component, then delete that object
             
-            //if (cb.getBoundsInLocal().intersects()){ 
-       
-        
-        
-        CelestialBody body1 = new CelestialBody(new Vector2D(0,100),30,10,new Vector2D(200,200));
-        CelestialBody body2 = new CelestialBody(new Vector2D(0,100),30,10,new Vector2D(350,350));
+        //if (cb.getBoundsInLocal().intersects()){ 
+
+        CelestialBody body1 = new CelestialBody(new Vector2D(0,100),30,15,new Vector2D(700,200));
+        CelestialBody body2 = new CelestialBody(new Vector2D(0,-100),30,10,new Vector2D(650,790));
         ArrayList<CelestialBody> cbArrayList = new ArrayList<>();
         cbArrayList.add(body1);
         cbArrayList.add(body2);        
@@ -206,28 +226,34 @@ public class FXMLDocumentController implements Initializable {
             public void handle(long instantTime) {
 
                 Vector2D gravitationalForce = SimulationPhysics.newtonsLaw(body1, body2);
-                
-                //SimulationPhysics.newtonsLaw(body1, body2);                 
+                                
                 //Calculates time values (current time, change in time, and the time value of the previous step)
                 double currentTime = (instantTime - initialTime) / 1000000000.0;
                 double deltaTime = currentTime - previousTimeStep;
                 previousTimeStep = currentTime;
                 
-                for (CelestialBody celb : cbArrayList) {   
-                    Vector2D antiGravForce = gravitationalForce.mult(-1); //force in the opposite direction. To be applied on the other body so that they move towards each other
+                //for (CelestialBody celb : cbArrayList) {   
+                for (int i = 0; i < cbArrayList.size(); i++) {
+                    //force in the opposite direction. To be applied on the other body so that they move towards each other, and not in the same direction
+                    Vector2D antiGravForce = gravitationalForce.mult(-1); 
+                    if (i == 1) {
+                        Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(gravitationalForce.mult(deltaTime));
+                        Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
+                        cbArrayList.get(i).setCoordinates(newPosition);
+                        cbArrayList.get(i).setTangentialVelocity(newTangentialVelocity);
                     
-                    Vector2D newTangentialVelocity = celb.getTangentialVelocity().add(gravitationalForce.mult(deltaTime));
-                    Vector2D newPosition = celb.getCoordinates().add(newTangentialVelocity.mult(deltaTime));
+                        cbArrayList.get(i).setCenterX(newPosition.getX());
+                        cbArrayList.get(i).setCenterY(newPosition.getY());
+                    }
+                    else {
+                        Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(antiGravForce.mult(deltaTime));
+                        Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
+                        cbArrayList.get(i).setCoordinates(newPosition);
+                        cbArrayList.get(i).setTangentialVelocity(newTangentialVelocity);
                     
-                    celb.setCoordinates(newPosition);
-                    celb.setTangentialVelocity(newTangentialVelocity);
-                    
-                    celb.setCenterX(newPosition.getX());
-                    celb.setCenterY(newPosition.getY());
-                    
-                    System.out.println(newPosition.getX());
-                    System.out.println(newPosition.getY());
-                    //UI.getChildren().get(0)
+                        cbArrayList.get(i).setCenterX(newPosition.getX());
+                        cbArrayList.get(i).setCenterY(newPosition.getY());
+                    }
                 }
             }   
         }.start();
@@ -253,7 +279,7 @@ public class FXMLDocumentController implements Initializable {
 1)$###### UPDATE OBJECT TYPE AND CONSTRUCTOR BASED ON CHECKBOX PREFERENCES!!!!####
 2) LOGIC FOR ENABLING AND RE-ENABLING TEXTFIELDS AND CHECKBOXES
     i) (DONE)IF ALL CBOXES ARE UNCHECKED, THEN RE-ENABLE THEM ALL
-    ii) IF A PRESET CHECKBOX IS CHOSEN, THE TEXTFIELDS ARE DISABLED
+    ii) (DONE)IF A PRESET CHECKBOX IS CHOSEN, THE TEXTFIELDS ARE DISABLED
     
 3)(DONE) MAKE CELESTIALBODY OBJECTS ADDABLE TO THE PANE (ONLY CIRCLES WORK, REFER TO INITIALIZE() METHOD FOR MORE INFO)
 *OPTIONAL* MAKE OBJECTS TRACE THEIR PATH WHEN MOVING ON-SCREEN

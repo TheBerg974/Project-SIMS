@@ -25,12 +25,12 @@
       <TextField fx:id="textFieldMass" layoutX="217.0" layoutY="713.0" onAction="#handleTextFieldMassAction" promptText="ree" />
       <TextField fx:id="textFieldRadius" layoutX="217.0" layoutY="766.0" onAction="#handleTextFieldRadiusAction" />
       <TextField fx:id="textFieldVelocity" layoutX="217.0" layoutY="822.0" onAction="#handleTextFieldVelocityAction" />
-      <CheckBox fx:id="checkBoxPlanet" layoutX="622.0" layoutY="738.0" mnemonicParsing="false" onAction="#onCheckBoxAction" />
-      <CheckBox fx:id="checkBoxStar" layoutX="777.0" layoutY="738.0" mnemonicParsing="false" onAction="#onCheckBoxAction" />
-      <CheckBox fx:id="checkBoxAsteroid" layoutX="934.0" layoutY="738.0" mnemonicParsing="false" onAction="#onCheckBoxAction" />
-      <CheckBox fx:id="checkBoxEarth" layoutX="622.0" layoutY="826.0" mnemonicParsing="false" onAction="#onCheckBoxAction" />
-      <CheckBox fx:id="checkBoxSun" layoutX="777.0" layoutY="826.0" mnemonicParsing="false" onAction="#onCheckBoxAction" />
-      <CheckBox fx:id="checkBoxPhiOrionis" layoutX="934.0" layoutY="826.0" mnemonicParsing="false" onAction="#onCheckBoxAction" />
+      <CheckBox fx:id="checkBoxPlanet" layoutX="622.0" layoutY="738.0" mnemonicParsing="false" onAction="#onObjectCheckBoxAction" />
+      <CheckBox fx:id="checkBoxStar" layoutX="777.0" layoutY="738.0" mnemonicParsing="false" onAction="#onObjectCheckBoxAction" />
+      <CheckBox fx:id="checkBoxAsteroid" layoutX="934.0" layoutY="738.0" mnemonicParsing="false" onAction="#onObjectCheckBoxAction" />
+      <CheckBox fx:id="checkBoxEarth" layoutX="622.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
+      <CheckBox fx:id="checkBoxSun" layoutX="777.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
+      <CheckBox fx:id="checkBoxPhiOrionis" layoutX="934.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="700.0" prefWidth="1218.0" />
     </children>
 </AnchorPane>
