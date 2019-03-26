@@ -22,9 +22,7 @@ public class CelestialBody extends Circle{
         this.tangentialVelocity = tangentialVelocity;
         this.mass = mass;
         this.radius = radius;
-
-        this.coordinates = coordinates; 
-        
+        this.coordinates = coordinates;   
     }
     
     //Getters and Setters

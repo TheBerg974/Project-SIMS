@@ -43,8 +43,6 @@ public class FXMLDocumentController implements Initializable {
     private AnchorPane UI;
 
     @FXML
-    private Button buttonExit;
-    @FXML
     private Button buttonPlay;
     @FXML
     private Button buttonTime100;
@@ -106,11 +104,6 @@ public class FXMLDocumentController implements Initializable {
     private Vector2D velocityVector;
     private Vector2D positionVector;
     
-    @FXML
-    private void handleExitButtonAction(ActionEvent event) {
-        //TODO: Will send the user back to the program's main menu.
-        System.exit(0); //for now, it's going to exit from the entire program
-    }
 
     @FXML
     private void handleMouseClickAction(MouseEvent me) {
@@ -209,18 +202,18 @@ public class FXMLDocumentController implements Initializable {
             
         //if (cb.getBoundsInLocal().intersects()){ 
 
-        CelestialBody body1 = new CelestialBody(new Vector2D(0,100),30,15,new Vector2D(700,200));
-        CelestialBody body2 = new CelestialBody(new Vector2D(0,-100),30,10,new Vector2D(650,790));
+        CelestialBody body1 = new CelestialBody(new Vector2D(0,100),700,15,new Vector2D(300,300));
+        CelestialBody body2 = new CelestialBody(new Vector2D(0,-100),30,10,new Vector2D(900,90));
+		
         ArrayList<CelestialBody> cbArrayList = new ArrayList<>();
         cbArrayList.add(body1);
-        cbArrayList.add(body2);        
+        cbArrayList.add(body2);
         
         //Time value when simulation begins
         long initialTime = System.nanoTime();
         
         addToPane(body1);
         addToPane(body2);
-        
         new AnimationTimer() {
             @Override
             public void handle(long instantTime) {
@@ -235,8 +228,25 @@ public class FXMLDocumentController implements Initializable {
                 //for (CelestialBody celb : cbArrayList) {   
                 for (int i = 0; i < cbArrayList.size(); i++) {
                     //force in the opposite direction. To be applied on the other body so that they move towards each other, and not in the same direction
-                    Vector2D antiGravForce = gravitationalForce.mult(-1); 
-                    if (i == 1) {
+                    int j = i+1;
+					if (j >= cbArrayList.size()) {
+						j = 0;
+					}
+					//Vector2D gravitationalForce = SimulationPhysics.newtonsLaw(cbArrayList.get(i), cbArrayList.get(j));
+					//WHAT I WOULD LIKE TO DO ABOVE IS DYNAMICALLY ENTER THE CELESTIALBODY INTO THE NEWTONSLAW METHOD
+					//SO THAT I COULD HAVE >2 BODIES
+					Vector2D antiGravForce = gravitationalForce.mult(-1); 
+					/*
+					Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(gravitationalForce.mult(-1* deltaTime));
+					Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
+					cbArrayList.get(i).setCoordinates(newPosition);
+					cbArrayList.get(i).setTangentialVelocity(newTangentialVelocity);
+
+					cbArrayList.get(i).setCenterX(newPosition.getX());
+					cbArrayList.get(i).setCenterY(newPosition.getY());
+					*/
+					
+					if (i == 1) {
                         Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(gravitationalForce.mult(deltaTime));
                         Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
                         cbArrayList.get(i).setCoordinates(newPosition);
@@ -246,15 +256,22 @@ public class FXMLDocumentController implements Initializable {
                         cbArrayList.get(i).setCenterY(newPosition.getY());
                     }
                     else {
-                        Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(antiGravForce.mult(deltaTime));
+						Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(antiGravForce.mult(deltaTime));
                         Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
                         cbArrayList.get(i).setCoordinates(newPosition);
                         cbArrayList.get(i).setTangentialVelocity(newTangentialVelocity);
                     
                         cbArrayList.get(i).setCenterX(newPosition.getX());
                         cbArrayList.get(i).setCenterY(newPosition.getY());
-                    }
+                    } 
                 }
+				//Collision handling
+				double distanceX = body1.getCoordinates().getX() - body2.getCoordinates().getX(); //x-coordinate distance between both bodies
+				double distanceY = body1.getCoordinates().getY() - body2.getCoordinates().getY(); //y-coordinate distance between both bodies
+				double distanceTotal = Math.hypot(distanceX, distanceY);
+				if (distanceTotal <= (body1.getRadius() + body2.getRadius())) { //if distance between 2 centers is as close, or closer than both of their radii, handle collision
+					
+				}
             }   
         }.start();
 

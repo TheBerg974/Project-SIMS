@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="panel" prefHeight="893.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orbitalsimulationmain.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="panel" prefHeight="892.0" prefWidth="1218.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orbitalsimulationmain.FXMLDocumentController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
-      <Button fx:id="buttonExit" layoutX="46.0" layoutY="53.0" mnemonicParsing="false" onAction="#handleExitButtonAction" prefHeight="55.0" prefWidth="80.0" text="Exit" />
       <Label fx:id="labelMass" layoutX="27.0" layoutY="717.0" prefHeight="17.0" prefWidth="126.0" text="Mass (in solar masses):" />
       <Label fx:id="labelRadius" layoutX="27.0" layoutY="773.0" text="Radius (in solar radii):" />
       <Label fx:id="labelVelocity" layoutX="27.0" layoutY="826.0" text="Velocity (in au/yr):" />
@@ -31,6 +28,6 @@
       <CheckBox fx:id="checkBoxEarth" layoutX="622.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <CheckBox fx:id="checkBoxSun" layoutX="777.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <CheckBox fx:id="checkBoxPhiOrionis" layoutX="934.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
-      <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="700.0" prefWidth="1218.0" />
+      <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="884.0" prefWidth="1218.0" />
     </children>
 </AnchorPane>

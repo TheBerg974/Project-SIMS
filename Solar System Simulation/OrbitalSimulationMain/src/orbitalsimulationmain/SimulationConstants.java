@@ -24,5 +24,5 @@ public interface SimulationConstants {
 	/*
 	Gravitational Constant, also known as 'G', in Newton's Law of Gravitation
 	*/
-	double UNIV_GRAV_CONSTANT = 6.64 * 1000;
+	double UNIV_GRAV_CONSTANT = 6.64 * 500;
 }
