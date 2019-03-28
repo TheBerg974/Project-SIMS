@@ -1,5 +1,5 @@
 TO DO LIST:
 so far single & double pendulum movement is programmed, using inputs (initial angle, length of rods, gravity, mass of pendulums)
-and displaying outputs (angles, angular vel & acc) as well as angle 2 vs. angle 1 graph
+and displaying outputs (angles, angular vel & acc) as well as angle 2 vs. angle 1 graph and trace of pendulums
 TO DO
 I must somehow derive the equations for the triple pendulum
