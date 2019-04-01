@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="871.0" prefWidth="1162.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="my.pend.project.FXMLDocumentController">
+    <children>
+      <TextField fx:id="mass1Input" layoutX="397.0" layoutY="697.0" prefHeight="25.0" prefWidth="47.0" />
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <Button fx:id="pauseButton" layoutX="69.0" layoutY="747.0" mnemonicParsing="false" text="Pause" />
+      <Button fx:id="resumeButton" layoutX="125.0" layoutY="747.0" mnemonicParsing="false" text="Resume" />
+      <CheckBox fx:id="showTrace" layoutX="265.0" layoutY="785.0" mnemonicParsing="false" text="Show Trace" />
+      <CheckBox fx:id="hidePendulums" layoutX="367.0" layoutY="785.0" mnemonicParsing="false" text="Hide Pendulums" />
+      <TextField fx:id="length1Input" layoutX="282.0" layoutY="697.0" prefHeight="25.0" prefWidth="47.0" />
+      <Text layoutX="225.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Length 1" />
+      <Text layoutX="225.0" layoutY="739.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Length 2" />
+      <Text layoutX="225.0" layoutY="764.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Length 3" />
+      <TextField fx:id="length2Input" layoutX="282.0" layoutY="722.0" prefHeight="25.0" prefWidth="47.0" />
+      <TextField fx:id="length3Input" layoutX="282.0" layoutY="747.0" prefHeight="25.0" prefWidth="47.0" />
+      <Text layoutX="349.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 1" />
+      <Text layoutX="349.0" layoutY="739.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 2" />
+      <Text layoutX="349.0" layoutY="764.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mass 3" />
+      <TextField fx:id="mass2Input" layoutX="397.0" layoutY="722.0" prefHeight="25.0" prefWidth="47.0" />
+      <TextField fx:id="mass3Input" layoutX="397.0" layoutY="747.0" prefHeight="25.0" prefWidth="47.0" />
+      <Text fx:id="angle1Text" layoutX="626.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angle 1: " />
+      <Text fx:id="angle2Text" layoutX="626.0" layoutY="739.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angle 2: " />
+      <Text fx:id="angle3Text" layoutX="626.0" layoutY="764.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angle 3: " />
+      <Text fx:id="message" layoutX="6.0" layoutY="839.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="1150.13671875">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Text layoutX="463.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="# of Pendulums" />
+      <RadioButton fx:id="amount1" layoutX="553.0" layoutY="701.0" mnemonicParsing="false" text="1">
+         <toggleGroup>
+            <ToggleGroup fx:id="amount" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="amount2" layoutX="553.0" layoutY="725.0" mnemonicParsing="false" text="2" toggleGroup="$amount" />
+      <RadioButton fx:id="amount3" layoutX="553.0" layoutY="751.0" mnemonicParsing="false" text="3" toggleGroup="$amount" />
+      <TextField fx:id="gravityInput" layoutX="159.0" layoutY="697.0" prefHeight="25.0" prefWidth="47.0" />
+      <Text layoutX="116.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gravity" />
+      <Button fx:id="resetButton" layoutX="103.0" layoutY="781.0" mnemonicParsing="false" text="Reset" />
+      <Text fx:id="angularVelocity1Text" layoutX="737.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angular Velocity 1: " />
+      <Text fx:id="angularVelocity2Text" layoutX="737.0" layoutY="739.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angular Velocity 2: " />
+      <Text fx:id="angularVelocity3Text" layoutX="737.0" layoutY="764.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angular Velocity 3: " />
+      <Text fx:id="angularAcceleration1Text" layoutX="924.0" layoutY="714.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angular Acceleration 1: " />
+      <Text fx:id="angularAcceleration2Text" layoutX="924.0" layoutY="739.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angular Acceleration 2: " />
+      <Text fx:id="angularAcceleration3Text" layoutX="924.0" layoutY="764.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angular Acceleration 3: " />
+      <Button fx:id="showGraphsButton" layoutX="263.0" layoutY="811.0" mnemonicParsing="false" text="Show Graphs" />
+    </children>
+</AnchorPane>
