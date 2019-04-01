@@ -40,7 +40,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private AnchorPane panel;
     @FXML
-    private AnchorPane UI;
+    private AnchorPane UI; //REMOVE STATIC?
 
     @FXML
     private Button buttonPlay;
@@ -48,6 +48,8 @@ public class FXMLDocumentController implements Initializable {
     private Button buttonTime100;
     @FXML
     private Button buttonTime500;
+	@FXML
+	private Button buttonClearPane;
 
     @FXML
     private Label labelMass;
@@ -281,12 +283,21 @@ public class FXMLDocumentController implements Initializable {
         // LOAD SHIT
         //set background of region
     }
-
+	/**
+	 * Will be used for the 'Clear pane' button in order to delete all CelestialBodies on the screen
+	 * @param arrayListCB an ArrayList containing all the celestial bodies on the screen
+	 */
+	public void clearPane(ArrayList<CelestialBody> arrayListCB) {
+		for (CelestialBody cb: arrayListCB) {
+			removeFromPane(cb);
+		}
+	}
+	
     public void addToPane(Node node) {
         UI.getChildren().add(node);
     }
 
-    public void removeFromPane(Node node) {
+    public void removeFromPane(Node node) { 
         UI.getChildren().remove(node);
     }
 }
