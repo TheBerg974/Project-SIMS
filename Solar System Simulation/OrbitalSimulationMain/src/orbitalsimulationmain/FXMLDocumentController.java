@@ -30,12 +30,15 @@ public class FXMLDocumentController implements Initializable {
 
     ArrayList<CheckBox> objectArrayList = new ArrayList<>();
     ArrayList<CheckBox> presetArrayList = new ArrayList<>();
-
     ArrayList<TextField> textfieldArrayList = new ArrayList<>();
-    
-    //ArrayList<LargeBody> largeBodyArrayList = new ArrayList<>();
 
+	ArrayList<CelestialBody> cbArrayList = new ArrayList<>();
+	ArrayList<Node> removeNodeList = new ArrayList<>();
+	ArrayList<CelestialBody> deadList = new ArrayList<>();
+	
     boolean selected = false;
+	double massRatio = 0;
+	double massRatio2 = 0;
 
     @FXML
     private AnchorPane panel;
@@ -98,18 +101,20 @@ public class FXMLDocumentController implements Initializable {
     private double mass= 0;
     private double radius = 0;
     private double velocity = 0;
-    //This value is used to find the time at which the object was on its previous step. 
+    
+//This value is used to find the time at which the object was on its previous step. 
     //For example: If object A is at step x at time y, and it takes 3 seconds per step, then previousTimeStep is time y-3, for step x-1
     private double previousTimeStep = 0.0;   
     
     private CelestialBody body; //Unfuck this variable. Make it point to the bodies one can create on the GUI 
     private Vector2D velocityVector;
     private Vector2D positionVector;
+	
+
     
 
     @FXML
     private void handleMouseClickAction(MouseEvent me) {
-        //CelestialBody cb = new CelestialBody(handleTextFieldVelocityAction(ae),handleTextFieldMassAction(ae),handleTextFieldRadiusAction(ae),me.getSceneX(),me.getSceneY());
         CelestialBody cb = new CelestialBody(new Vector2D(15,15), mass, radius, new Vector2D(me.getSceneX(), me.getSceneY()));
         addToPane(cb);
         if (me.getSceneY() > 700) {
@@ -142,7 +147,6 @@ public class FXMLDocumentController implements Initializable {
         for (CheckBox cbox : objectArrayList) {
             if (cbox.isSelected()) {
                 //objectArrayList.remove(cbox);
-                
             }
             else if (!cbox.isSelected()) {
                 cbox.setDisable(true);
@@ -199,15 +203,10 @@ public class FXMLDocumentController implements Initializable {
         //Adds all the textfields to an ArrayList so they can be easily dealt with
         textfieldArrayList.add(textFieldMass);
         textfieldArrayList.add(textFieldRadius);
-        
-        //if any space object on the pane intersects any component, then delete that object
-            
-        //if (cb.getBoundsInLocal().intersects()){ 
 
-        CelestialBody body1 = new CelestialBody(new Vector2D(0,100),700,15,new Vector2D(300,300));
-        CelestialBody body2 = new CelestialBody(new Vector2D(0,-100),30,10,new Vector2D(900,90));
+        CelestialBody body1 = new CelestialBody(new Vector2D(50,0),100,50,new Vector2D(100,600));
+        CelestialBody body2 = new CelestialBody(new Vector2D(0,15),30,10,new Vector2D(700,300));
 		
-        ArrayList<CelestialBody> cbArrayList = new ArrayList<>();
         cbArrayList.add(body1);
         cbArrayList.add(body2);
         
@@ -216,10 +215,10 @@ public class FXMLDocumentController implements Initializable {
         
         addToPane(body1);
         addToPane(body2);
+		
         new AnimationTimer() {
             @Override
             public void handle(long instantTime) {
-
                 Vector2D gravitationalForce = SimulationPhysics.newtonsLaw(body1, body2);
                                 
                 //Calculates time values (current time, change in time, and the time value of the previous step)
@@ -227,27 +226,12 @@ public class FXMLDocumentController implements Initializable {
                 double deltaTime = currentTime - previousTimeStep;
                 previousTimeStep = currentTime;
                 
-                //for (CelestialBody celb : cbArrayList) {   
+				//WHAT I WOULD LIKE TO DO ABOVE IS DYNAMICALLY ENTER THE CELESTIALBODY INTO THE NEWTONSLAW METHOD
+				//SO THAT I COULD HAVE >2 BODIES
                 for (int i = 0; i < cbArrayList.size(); i++) {
                     //force in the opposite direction. To be applied on the other body so that they move towards each other, and not in the same direction
-                    int j = i+1;
-					if (j >= cbArrayList.size()) {
-						j = 0;
-					}
-					//Vector2D gravitationalForce = SimulationPhysics.newtonsLaw(cbArrayList.get(i), cbArrayList.get(j));
-					//WHAT I WOULD LIKE TO DO ABOVE IS DYNAMICALLY ENTER THE CELESTIALBODY INTO THE NEWTONSLAW METHOD
-					//SO THAT I COULD HAVE >2 BODIES
-					Vector2D antiGravForce = gravitationalForce.mult(-1); 
-					/*
-					Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(gravitationalForce.mult(-1* deltaTime));
-					Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
-					cbArrayList.get(i).setCoordinates(newPosition);
-					cbArrayList.get(i).setTangentialVelocity(newTangentialVelocity);
 
-					cbArrayList.get(i).setCenterX(newPosition.getX());
-					cbArrayList.get(i).setCenterY(newPosition.getY());
-					*/
-					
+					Vector2D antiGravForce = gravitationalForce.mult(-1); 
 					if (i == 1) {
                         Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(gravitationalForce.mult(deltaTime));
                         Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
@@ -265,41 +249,82 @@ public class FXMLDocumentController implements Initializable {
                     
                         cbArrayList.get(i).setCenterX(newPosition.getX());
                         cbArrayList.get(i).setCenterY(newPosition.getY());
+						
                     } 
+					//Collision handling
+					double distanceX = body1.getCoordinates().getX() - body2.getCoordinates().getX(); //x-coordinate distance between both bodies
+					double distanceY = body1.getCoordinates().getY() - body2.getCoordinates().getY(); //y-coordinate distance between both bodies
+					double distanceTotal = Math.hypot(distanceX, distanceY);
+					if (body1.getBoundsInParent().intersects(body2.getBoundsInParent())) { //if distance between 2 centers is as close, or closer than both of their radii, handle collision
+						handleCollisions(cbArrayList);
+					}
+					for(Node node: removeNodeList) {
+						removeFromPane(node);
+					}
+					for (CelestialBody deadPlanet: deadList) {
+						cbArrayList.remove(deadPlanet);
+					}
                 }
-				//Collision handling
-				double distanceX = body1.getCoordinates().getX() - body2.getCoordinates().getX(); //x-coordinate distance between both bodies
-				double distanceY = body1.getCoordinates().getY() - body2.getCoordinates().getY(); //y-coordinate distance between both bodies
-				double distanceTotal = Math.hypot(distanceX, distanceY);
-				if (distanceTotal <= (body1.getRadius() + body2.getRadius())) { //if distance between 2 centers is as close, or closer than both of their radii, handle collision
-					
-				}
             }   
         }.start();
-
-        //Circle c = new Circle(200, 200, 20);
-        
-       // addToPane(c);
-        // LOAD SHIT
-        //set background of region
     }
 	/**
 	 * Will be used for the 'Clear pane' button in order to delete all CelestialBodies on the screen
 	 * @param arrayListCB an ArrayList containing all the celestial bodies on the screen
 	 */
-	public void clearPane(ArrayList<CelestialBody> arrayListCB) {
+	public  void clearPane(ArrayList<CelestialBody> arrayListCB) {
 		for (CelestialBody cb: arrayListCB) {
 			removeFromPane(cb);
 		}
 	}
-	
-    public void addToPane(Node node) {
+	/**
+	 * Adds an object to the pane to be visible
+	 * @param node 
+	 */
+    public  void addToPane(Node node) { //3 STATICS
         UI.getChildren().add(node);
     }
-
+	/**
+	 * Removes an object from the pane 
+	 * @param node 
+	 */
     public void removeFromPane(Node node) { 
         UI.getChildren().remove(node);
     }
+	
+	/**
+	 * This method deals with the event that a collision happens between 2 bodies.
+	 * @param body1
+	 * @param body2
+	 * @return 
+	 */
+	public void handleCollisions(ArrayList<CelestialBody> cbAL) { //remove static?
+		massRatio = (cbAL.get(0).getMass()/cbAL.get(1).getMass());
+		massRatio2 = (cbAL.get(1).getMass()/cbAL.get(0).getMass());
+		System.out.println(massRatio);
+		System.out.println(massRatio2);
+		
+		if((massRatio> 0.5 ) &&(massRatio <1) || (massRatio2 > 0.5)&&(massRatio2 <1)) { //if 1st body is larger or equal to 50% of the other body's mass, they both annihilate
+			for (CelestialBody cb : cbAL) {
+				clearPane(cbAL);
+			}
+		}
+		
+		else if(massRatio< 0.5) { //if body 1 is smaller than body 2, and they collide, body 1 breaks up, and is absorbed by body 2 
+			removeNodeList.add(cbAL.get(0));
+			cbAL.get(1).setMass(cbAL.get(1).getMass() + cbAL.get(0).getMass());
+			deadList.add(cbAL.get(0));
+			
+		}
+
+		else if(massRatio2< 0.5) { //if body 2 is smaller than body 1, and they collide, body 1 breaks up, and is absorbed by body 2
+			removeNodeList.add(cbAL.get(1));
+			cbAL.get(0).setMass(cbAL.get(0).getMass() + cbAL.get(1).getMass());
+			deadList.add(cbAL.get(1));
+
+		}
+
+	}	
 }
 
 /*TODO FOR GUI: 
@@ -313,5 +338,8 @@ public class FXMLDocumentController implements Initializable {
 *OPTIONAL* MAKE OBJECTS TRACE THEIR PATH WHEN MOVING ON-SCREEN
 4) ENSURE THAT OBJECTS CANNOT BE ADDED OVER THE BUTTONS, CHECKBOXES AND TEXTFIELDS. (PUT THEM OUT OF FOCUS)
 5) (DONE) HOW TO MAKE IT SO THAT THERE'S NO NULLPOINTEREXCEPTION? SO THAT THE CELESTIALBODY OBJECT NAMED 'BODY' POINTS TO THE OBJECTS CREATED IN THE GUI?
-6) MAKE THE MATH UPDATE MORE OFTEN THAN THE GUI (60 VS 30 FPS FOR EXAMPLE)
+6) ADD A GIF TO BACKGROUND
+7) EXCEPTION HANDLING FOR TEXTFIELDS
+8) PREVENT >2 BODIES FROM GOING ON SCREEN
+
 */

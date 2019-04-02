@@ -6,16 +6,20 @@
 package orbitalsimulationmain;
 
 import CelestialBody.CelestialBody;
-import javafx.scene.shape.Circle;
+import java.util.ArrayList;
 
 /**
  *
  * @author Frankie
  */
 public class SimulationPhysics {
-    /*
-     This method applies Newton's law based on the interactions between two bodies, and gives the magnitude of the vector
-     */
+	
+	/**
+	 * This method applies Newton's law based on the interactions between two bodies, and gives the magnitude of the vector
+	 * @param firstBody
+	 * @param otherBody
+	 * @return 
+	 */ 
     public static Vector2D newtonsLaw(CelestialBody firstBody, CelestialBody otherBody) {
         double distanceX = firstBody.getCoordinates().getX() - otherBody.getCoordinates().getX(); //x-coordinate distance between both bodies
         double distanceY = firstBody.getCoordinates().getY() - otherBody.getCoordinates().getY(); //y-coordinate distance between both bodies
@@ -27,41 +31,8 @@ public class SimulationPhysics {
         //System.out.println(gravAccel.getY());
         return gravAccel; 
     }
+			
 	
-	public static Vector2D handleCollisions(CelestialBody body1, CelestialBody body2) {
-		if(((body1.getMass()/body2.getMass()) * 100) < 50) {
-			//FXMLDocumentController.removeFromPane(body1);
-		}
-		/*		
-		//get center position vectors for each object
-		Vector2D center1 = new Vector2D(body1.getCoordinates().getX(), body1.getCoordinates().getY());
-		Vector2D center2 = new Vector2D(body2.getCoordinates().getX(), body2.getCoordinates().getY());
-		
-		
-		//find normal and tangent vectors
-		Vector2D normalVector = center1.sub(center2);
-		double normalVectorX = normalVector.getX();
-		double normalVectorY = normalVector.getY();
-		
-		Vector2D tangentVector = new Vector2D(normalVectorX, -1*normalVectorY);
-		
-		//update velocities according to tangent and normal vectors
-		Vector2D vec1Tan = null;//original velocity vector.mult(tangentVector);
-		Vector2D vec2Tan = null;//orig vel vect.mult(tangentVector);
-		Vector2D vec1Norm = null;//original velocity vector.mult(normalVector);
-		Vector2D vec2Norm = null;//original velocity vector.mult(normalVector);
-		
-		//updated velocities
-		Vector2D v1Updated = vec1Tan.add(vec1Norm).sub(vec2Norm);
-		Vector2D v2Updated = vec2Tan.add(vec2Norm).sub(vec1Norm);
-		return (v1Updated && v2Updated);
-		*/
-	}
-	
-	public static Vector2D getNormalVector() {
-		
-	}
-
     /*
     TO DO: 
     1) (DONE) find the direction that the force is pointing to for each body
@@ -70,5 +41,5 @@ public class SimulationPhysics {
     4) COLLISION AND THEIR CONDITIONS
     */
     
-        
+    
 }
