@@ -24,6 +24,8 @@ public class OrbSimGUI extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        scene.getRoot().requestFocus();
+        stage.setResizable(false);
         stage.show();
     }
 

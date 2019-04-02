@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="panel" prefHeight="892.0" prefWidth="1218.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orbitalsimulationmain.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="panel" prefHeight="895.0" prefWidth="1218.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orbitalsimulationmain.FXMLDocumentController">
     <children>
+      <Rectangle fx:id="rect" arcHeight="5.0" arcWidth="5.0" fill="#1fd9ff" height="208.0" layoutY="692.0" stroke="BLACK" strokeType="INSIDE" width="1237.0" />
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <Label fx:id="labelMass" layoutX="27.0" layoutY="717.0" prefHeight="17.0" prefWidth="126.0" text="Mass (in solar masses):" />
       <Label fx:id="labelRadius" layoutX="27.0" layoutY="773.0" text="Radius (in solar radii):" />
@@ -19,15 +24,19 @@
       <Label fx:id="labelSun" layoutX="743.0" layoutY="826.0" text="Sun" />
       <Label fx:id="labelPhiOrionis" layoutX="864.0" layoutY="826.0" text="Phi Orionis" />
       <Label fx:id="labelChoosePreset" layoutX="559.0" layoutY="790.0" text="Or, choose a preset:" />
-      <TextField fx:id="textFieldMass" layoutX="217.0" layoutY="713.0" onAction="#handleTextFieldMassAction" promptText="ree" />
-      <TextField fx:id="textFieldRadius" layoutX="217.0" layoutY="766.0" onAction="#handleTextFieldRadiusAction" />
-      <TextField fx:id="textFieldVelocity" layoutX="217.0" layoutY="822.0" onAction="#handleTextFieldVelocityAction" />
+      <TextField fx:id="textFieldMass" layoutX="217.0" layoutY="713.0" promptText="ree" text="37" />
+      <TextField fx:id="textFieldRadius" layoutX="217.0" layoutY="766.0" text="50" />
+      <TextField fx:id="textFieldVelocityX" layoutX="217.0" layoutY="822.0" prefHeight="25.0" prefWidth="58.0" text="30" />
       <CheckBox fx:id="checkBoxPlanet" layoutX="622.0" layoutY="738.0" mnemonicParsing="false" onAction="#onObjectCheckBoxAction" />
       <CheckBox fx:id="checkBoxStar" layoutX="777.0" layoutY="738.0" mnemonicParsing="false" onAction="#onObjectCheckBoxAction" />
       <CheckBox fx:id="checkBoxAsteroid" layoutX="934.0" layoutY="738.0" mnemonicParsing="false" onAction="#onObjectCheckBoxAction" />
       <CheckBox fx:id="checkBoxEarth" layoutX="622.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <CheckBox fx:id="checkBoxSun" layoutX="777.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <CheckBox fx:id="checkBoxPhiOrionis" layoutX="934.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
-      <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="884.0" prefWidth="1218.0" />
+      <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="690.0" prefWidth="1218.0" />
+      <Label fx:id="labelVelocityX" layoutX="194.0" layoutY="826.0" prefHeight="17.0" prefWidth="21.0" text="X:" />
+      <Label fx:id="labelVelocityY" layoutX="286.0" layoutY="826.0" prefHeight="17.0" prefWidth="20.0" text="Y:" />
+      <TextField fx:id="textFieldVelocityY" layoutX="308.0" layoutY="822.0" prefHeight="25.0" prefWidth="58.0" text="0" />
+      <Button fx:id="buttonCreateObject" layoutX="403.0" layoutY="753.0" mnemonicParsing="false" onAction="#handleCreateObjectButton" prefHeight="51.0" prefWidth="90.0" text="Create Object" />
     </children>
 </AnchorPane>
