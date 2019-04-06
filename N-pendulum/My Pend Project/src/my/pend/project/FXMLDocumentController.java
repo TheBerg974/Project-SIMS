@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+// Programmed by Sevag Baghdassarian
 package my.pend.project;
 
 import java.io.IOException;
@@ -81,29 +77,21 @@ public class FXMLDocumentController implements Initializable {
     TextField mass1Input;
     @FXML
     TextField mass2Input;
-    @FXML
-    TextField mass3Input;
 
     @FXML
     Text angle1Text;
     @FXML
     Text angle2Text;
-    @FXML
-    Text angle3Text;
 
     @FXML
     Text angularVelocity1Text;
     @FXML
     Text angularVelocity2Text;
-    @FXML
-    Text angularVelocity3Text;
-
+    
     @FXML
     Text angularAcceleration1Text;
     @FXML
     Text angularAcceleration2Text;
-    @FXML
-    Text angularAcceleration3Text;
 
     @FXML
     TextField gravityInput;
@@ -115,14 +103,24 @@ public class FXMLDocumentController implements Initializable {
     RadioButton amount1;
     @FXML
     RadioButton amount2;
-    @FXML
-    RadioButton amount3;
 
     @FXML
     Button showGraphsButton;
+    @FXML
+    Button showAngle1vsTimeButton;
+    @FXML
+    Button showAngle2vsTimeButton;
+    @FXML
+    Button showAnglesVsTimeButton;
 
     @FXML
     ScatterChart<?, ?> anglesScatterChart;
+    @FXML
+    ScatterChart<?, ?> angle1vsTimeScatterChart;
+    @FXML
+    ScatterChart<?, ?> angle2vsTimeScatterChart;
+    @FXML
+    ScatterChart<?, ?> anglesVsTimeScatterChart;
 
     @FXML
     CategoryAxis x;
@@ -133,95 +131,107 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     AnchorPane anglesGraphPane;
 
-    //private double lastFrameTime = 0.0;
-    private boolean dragging = false;
+    private double lastFrameTime = 0.0;
+    private boolean dragging = false; // checks if mouse is dragging the pendulum
 
-    private Point2D screenOrigin = new Point2D(500, 300);
+    private Point2D screenOrigin = new Point2D(500, 300); // sets the origin of the pendulums
 
-    private int pendNum = 2;
+    private int pendNum = 2; // number of pendulums
 
-    private double scale = 0.00025;
+    private double scale = 0.00025; // scale to make animation realistic
     private double gravity = 9.81 * scale;
 
+    // initial angles for the animation, to be changed with TextField inputs
     private double angle1 = (pi() / 3) % (2 * pi());
     private double angle2 = (pi() / 4) % (2 * pi());
-    private double angle3 = (pi() / 1) % (2 * pi());
-    private double[] angleArray = {angle1, angle2, angle3};
+    private double[] angleArray = {angle1, angle2};
 
+    // set initialAngles to use when animation is reset
     private double initialAngle1 = angle1;
     private double initialAngle2 = angle2;
-    private double initialAngle3 = angle3;
 
+    // circles representing the pendulums
     private Circle p1 = null;
     private Circle p2 = null;
-    private Circle p3 = null;
-    private Circle[] pendulumArray = {p1, p2, p3};
-    private Circle point = null;
+    private Circle[] pendulumArray = {p1, p2};
+    private Circle point = null; // origin point
 
+    // initial lengths of the rods, to be changed with TextField inputs
     private double L1 = 140;
     private double L2 = 120;
-    private double L3 = 100;
-    private double[] lengthArray = {L1, L2, L3};
+    private double[] lengthArray = {L1, L2};
 
+    // masses of pendulums (radii of the circles)
     private double m1 = 20;
     private double m2 = 20;
-    private double m3 = 30;
-    private double[] massArray = {m1, m2, m3};
+    private double[] massArray = {m1, m2};
 
+    // velocities of the pendulums set to 0
     private double vel1 = 0;
     private double vel2 = 0;
-    private double vel3 = 0;
     private double tempVel1 = 0;
 
+    // initial velocities of the pendulums to use when animation is reset
     private double initialVel1 = vel1;
     private double initialVel2 = vel2;
-    private double initialVel3 = vel3;
 
+    // accelerations of the pendulums set to 0
     private double acc1 = 0;
     private double acc2 = 0;
-    private double acc3 = 0;
     private double tempAcc1 = 0;
 
+    // lines representing the rods for each pendulum
     private Line line1 = null;
     private Line line2 = null;
-    private Line line3 = null;
 
+    // coordinates of the positions of each pendulum set to 0, to be assigned values
     private double initialX1 = 0;
     private double initialY1 = 0;
     private double initialX2 = 0;
     private double initialY2 = 0;
-    private double initialX3 = 0;
-    private double initialY3 = 0;
 
+
+    // AnimationTimer which will define the animation
     private AnimationTimer a = null;
 
-    private boolean graphsOpen = false;
+    private boolean anglesGraphOpen = false;
+    private boolean angle1vsTimeGraphOpen = false;
+    private boolean angle2vsTimeGraphOpen = false;
+    private boolean anglesVsTimeGraphOpen = false;
+    
+    XYChart.Series anglesSeries = null; // data series for the angle 2 vs. angle 1 graph
+    XYChart.Series angle1vsTimeSeries = null;
+    XYChart.Series angle2vsTimeSeries = null;
+    XYChart.Series anglesVsTimeSeries = null;
 
-    XYChart.Series anglesSeries = null;
-
+    // ArrayList which will containt the traces of the pendulums
     private ArrayList<Circle> traces = new ArrayList<Circle>();
+
+    // boolean keeping track of whether or not the animation is running
     private boolean isPlaying = true;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        //lastFrameTime = 0.0f;
-        //long initialTime = System.nanoTime();
+        lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();
+
         pauseButton.setOnMouseClicked(pauseClicked);
         resumeButton.setOnMouseClicked(resumeClicked);
 
         gravityInput.setText("9.81");
         length1Input.setText("" + L1);
         length2Input.setText("" + L2);
-        length3Input.setText("" + L3);
 
         mass1Input.setText("" + m1);
         mass2Input.setText("" + m2);
-        mass3Input.setText("" + m3);
 
         amount2.setSelected(true);
 
         showGraphsButton.setOnMouseClicked(showGraphsButtonPressed);
+        showAngle1vsTimeButton.setOnMouseClicked(showAngle1vsTimeButtonPressed);
+        showAngle2vsTimeButton.setOnMouseClicked(showAngle2vsTimeButtonPressed);
+        showAnglesVsTimeButton.setOnMouseClicked(showAnglesVsTimeButtonPressed);
 
         point = new Circle(screenOrigin.getX(), screenOrigin.getY(), 2);
         addToPane(point);
@@ -250,14 +260,13 @@ public class FXMLDocumentController implements Initializable {
 
         }
 
-        if (pendNum == 3) {
-            // SET UP 3RD PENDULUM CIRCLE
-            // SET VALUES FOR INITIAL X AND Y
-        }
-
         a = new AnimationTimer() {
             @Override
             public void handle(long now) {
+
+                double currentTime = (now - initialTime) / 1000000000.0;
+                double frameDeltaTime = currentTime - lastFrameTime;
+                lastFrameTime = currentTime;
 
                 checkBoxes();
                 disableButtons();
@@ -266,33 +275,7 @@ public class FXMLDocumentController implements Initializable {
                 // DRAGGING FUNCTION
                 p1.setOnMouseDragged(circle1Clicked);
 
-                resetButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        angle1 = initialAngle1;
-                        angle2 = initialAngle2;
-                        angle3 = initialAngle3;
-
-                        p1.setCenterX(initialX1);
-                        p1.setCenterY(initialY1);
-                        line1.setEndX(p1.getCenterX());
-                        line1.setEndY(p1.getCenterY());
-                        vel1 = initialVel1;
-                        if (pendNum == 2) {
-                            p2.setCenterX(initialX2);
-                            p2.setCenterY(initialY2);
-                            line2.setStartX(p1.getCenterX());
-                            line2.setStartY(p1.getCenterY());
-                            line2.setEndX(p2.getCenterX());
-                            line2.setEndY(p2.getCenterY());
-                            vel2 = initialVel2;
-                        }
-                        if (pendNum == 3) {
-                            // DO THE SAME FOR 3RD PENDULUM
-                        }
-
-                    }
-                });
+                resetButton.setOnMouseClicked(resetButtonClicked);
 
                 length1Input.setOnKeyPressed(enterLengths);
                 length2Input.setOnKeyPressed(enterLengths);
@@ -300,11 +283,9 @@ public class FXMLDocumentController implements Initializable {
 
                 mass1Input.setOnKeyPressed(enterMasses);
                 mass2Input.setOnKeyPressed(enterMasses);
-                mass3Input.setOnKeyPressed(enterMasses);
 
                 amount1.setOnMouseClicked(amountButtonPressed);
                 amount2.setOnMouseClicked(amountButtonPressed);
-                amount3.setOnMouseClicked(amountButtonPressed);
 
                 gravityInput.setOnKeyPressed(enterGravity);
 
@@ -361,18 +342,26 @@ public class FXMLDocumentController implements Initializable {
                     showPendulums();
                 }
 
-                if (graphsOpen) {
-
+                drawAnglesGraph();
+                if (angle1vsTimeGraphOpen) {
                     try {
-                        anglesSeries.getData().add(new XYChart.Data(angle1, angle2));
-                        anglesScatterChart.getData().add(anglesSeries);
-                    } catch(Exception e) {
-                        
-                    }
+                        angle1vsTimeSeries.getData().add(new XYChart.Data(currentTime, angle1 % (2 * pi())));
+                    } catch (Exception e) {
 
+                    }
                 }
-                
-                
+                if(angle2vsTimeGraphOpen) {
+                    try {
+                        angle2vsTimeSeries.getData().add(new XYChart.Data(currentTime, angle2 % (2 * pi())));
+                        //angle2vsTimeSeries.getData().add(new XYChart.Data(currentTime, angle1 % (2 * pi())));
+                    } catch (Exception e) {
+
+                    }
+                }
+                if(anglesVsTimeGraphOpen) {
+                    anglesVsTimeSeries.getData().add(new XYChart.Data(currentTime, angle2 % (2 * pi())));
+                    anglesVsTimeSeries.getData().add(new XYChart.Data(currentTime, angle1 % (2 * pi())));
+                }
 
             }
 
@@ -381,6 +370,25 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
+    public void drawAnglesGraph() {
+        if (anglesGraphOpen) {
+            try {
+                anglesSeries.getData().add(new XYChart.Data(angle1 % (2*pi()), angle2 % (2*pi())));
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+//    public void drawAngle1vsTimeGraph() {
+//        if(angle1vsTimeGraphOpen) {
+//            try {
+//                angle1vsTimeSeries.getData().add(new XYChart.Data(current))
+//            } catch(Exception e) {
+//                
+//            }
+//        }
+//    }
     public void trace() {
         if (pendNum == 1) {
             Circle p = new Circle(p1.getCenterX(), p1.getCenterY(), 1, Color.DARKRED);
@@ -398,6 +406,120 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
+    EventHandler<MouseEvent> showAngle1vsTimeButtonPressed = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+
+            try {
+
+                message.setText("Angle 1 vs. Time graph loaded.");
+
+                NumberAxis xAxis = new NumberAxis();
+                xAxis.setLabel("Time");
+
+                NumberAxis yAxis = new NumberAxis(-Math.abs(2 * pi()), Math.abs(2 * pi()), 1.0);
+                yAxis.setLabel("Angle 1");
+
+                angle1vsTimeScatterChart = new ScatterChart(xAxis, yAxis);
+                angle1vsTimeScatterChart.setTitle("Angle 1 vs. Time");
+                angle1vsTimeScatterChart.setPrefSize(1000, 1000);
+
+                angle1vsTimeSeries = new XYChart.Series();
+                angle1vsTimeSeries.setName("Angle 1 vs. Time");
+
+                angle1vsTimeScatterChart.getData().add(angle1vsTimeSeries);
+
+                Group root = new Group(angle1vsTimeScatterChart);
+                Scene scene = new Scene(root, 1000, 1000);
+                Stage stage = new Stage();
+                stage.setTitle("Angle 1 vs. Time Graph Window");
+                stage.setScene(scene);
+                stage.show();
+                angle1vsTimeGraphOpen = true;
+
+            } catch (Exception e) {
+                message.setText("Could not load angle 1 vs. time graph window.");
+            }
+        }
+
+    };
+    
+    EventHandler<MouseEvent> showAngle2vsTimeButtonPressed = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+
+            try {
+
+                message.setText("Angle 2 vs. Time graph loaded.");
+
+                NumberAxis xAxis = new NumberAxis();
+                xAxis.setLabel("Time");
+
+                NumberAxis yAxis = new NumberAxis(-Math.abs(2 * pi()), Math.abs(2 * pi()), 1.0);
+                yAxis.setLabel("Angle 2");
+
+                angle2vsTimeScatterChart = new ScatterChart(xAxis, yAxis);
+                angle2vsTimeScatterChart.setTitle("Angle 2 vs. Time");
+                angle2vsTimeScatterChart.setPrefSize(1000, 1000);
+
+                angle2vsTimeSeries = new XYChart.Series();
+                angle2vsTimeSeries.setName("Angle 2 vs. Time");
+
+                angle2vsTimeScatterChart.getData().add(angle2vsTimeSeries);
+
+                Group root = new Group(angle2vsTimeScatterChart);
+                Scene scene = new Scene(root, 1000, 1000);
+                Stage stage = new Stage();
+                stage.setTitle("Angle 2 vs. Time Graph Window");
+                stage.setScene(scene);
+                stage.show();
+                angle2vsTimeGraphOpen = true;
+
+            } catch (Exception e) {
+                message.setText("Could not load angle 2 vs. time graph window.");
+            }
+        }
+
+    };
+    
+    EventHandler<MouseEvent> showAnglesVsTimeButtonPressed = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+
+            try {
+
+                message.setText("Angle 1 & Angle 2 vs. Time graph loaded.");
+
+                NumberAxis xAxis = new NumberAxis();
+                xAxis.setLabel("Time");
+
+                NumberAxis yAxis = new NumberAxis(-Math.abs(2 * pi()), Math.abs(2 * pi()), 1.0);
+                yAxis.setLabel("Angle 1 & Angle 2");
+
+                anglesVsTimeScatterChart = new ScatterChart(xAxis, yAxis);
+                anglesVsTimeScatterChart.setTitle("Angle 1 & Angle 2 vs. Time");
+                anglesVsTimeScatterChart.setPrefSize(1000, 1000);
+
+                anglesVsTimeSeries = new XYChart.Series();
+                anglesVsTimeSeries.setName("Angle 1 & Angle 2 vs. Time");
+
+                anglesVsTimeScatterChart.getData().add(anglesVsTimeSeries);
+
+                Group root = new Group(anglesVsTimeScatterChart);
+                Scene scene = new Scene(root, 1000, 1000);
+                Stage stage = new Stage();
+                stage.setTitle("Angle 1 & Angle 2 vs. Time Graph Window");
+                stage.setScene(scene);
+                stage.show();
+                anglesVsTimeGraphOpen = true;
+
+            } catch (Exception e) {
+                message.setText("Could not load angle 1 & angle 2 vs. time graph window.");
+            }
+        }
+
+    };
+
     EventHandler<MouseEvent> showGraphsButtonPressed = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
@@ -410,13 +532,12 @@ public class FXMLDocumentController implements Initializable {
 //                stage.setScene(new Scene(root1));
 //                stage.show();
 
-                message.setText("Graphs loaded.");
+                message.setText("Angle 2 vs. Angle 1 graph loaded.");
 
-                
-                NumberAxis xAxis = new NumberAxis(-6 * Math.abs(angle1), 6 * Math.abs(angle1), 4.0);
+                NumberAxis xAxis = new NumberAxis(-Math.abs(2 * pi()), Math.abs(2 * pi()), 1.0);
                 xAxis.setLabel("Angle 1");
 
-                NumberAxis yAxis = new NumberAxis(-6 * Math.abs(angle2), 6 * Math.abs(angle2), 4.0);
+                NumberAxis yAxis = new NumberAxis(-Math.abs(2 * pi()), Math.abs(2 * pi()), 1.0);
                 yAxis.setLabel("Angle 2");
 
                 anglesScatterChart = new ScatterChart(xAxis, yAxis);
@@ -431,13 +552,13 @@ public class FXMLDocumentController implements Initializable {
                 Group root = new Group(anglesScatterChart);
                 Scene scene = new Scene(root, 1000, 1000);
                 Stage stage = new Stage();
-                stage.setTitle("Graphs Window");
+                stage.setTitle("Angle 2 vs. Angle 1 Graph Window");
                 stage.setScene(scene);
                 stage.show();
-                graphsOpen = true;
+                anglesGraphOpen = true;
 
             } catch (Exception e) {
-                message.setText("Cannot load graphs window.");
+                message.setText("Could not load angle 2 vs. angle 1 graph window.");
             }
 
         }
@@ -449,6 +570,7 @@ public class FXMLDocumentController implements Initializable {
 
             Point2D diff = new Point2D(screenOrigin.getX() - event.getSceneX(), screenOrigin.getY() - event.getSceneY());
             angle1 = Math.atan2(-1 * diff.getY(), diff.getX()) - pi() / 2;
+            initialAngle1 = angle1;
             vel1 = 0;
             p1.setCenterX(L1 * sin(angle1) + screenOrigin.getX());
             p1.setCenterY(L1 * cos(angle1) + screenOrigin.getY());
@@ -466,6 +588,33 @@ public class FXMLDocumentController implements Initializable {
             }
             updateAngles();
         }
+    };
+
+    EventHandler<MouseEvent> resetButtonClicked = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            angle1 = initialAngle1;
+            angle2 = initialAngle2;
+
+//            p1.setCenterX( L1 * sin(angle1) );
+//            p1.setCenterY( L1 * cos(angle2) );
+            line1.setEndX(p1.getCenterX());
+            line1.setEndY(p1.getCenterY());
+            vel1 = initialVel1;
+            if (pendNum == 2) {
+                p2.setCenterX( p1.getCenterX() + L2 * sin(angle2) );
+                p2.setCenterY( p1.getCenterY() + L2 * cos(angle2) );  // p1.getCenterY() + L2 * cos(angle2)
+                line2.setStartX(p1.getCenterX());
+                line2.setStartY(p1.getCenterY());
+                line2.setEndX(p2.getCenterX());
+                line2.setEndY(p2.getCenterY());
+                vel2 = initialVel2;
+            }
+            if (pendNum == 3) {
+                // DO THE SAME FOR 3RD PENDULUM
+            }
+        }
+
     };
 
     EventHandler<KeyEvent> enterLengths = new EventHandler<KeyEvent>() {
@@ -508,8 +657,6 @@ public class FXMLDocumentController implements Initializable {
         } else if (pendNum == 3) {
             p2.setVisible(true);
             line2.setVisible(true);
-            p3.setVisible(true);
-            line3.setVisible(true);
         }
     }
 
@@ -525,14 +672,35 @@ public class FXMLDocumentController implements Initializable {
 //                L3 = Double.parseDouble( length3Input.getText() );
 //            }
             if (!length1Input.getText().equalsIgnoreCase("")) {
-                L1 = Double.parseDouble(length1Input.getText());
+                double temp = Double.parseDouble(length1Input.getText());
+                if (temp > 0) {
+                    L1 = temp;
+                } else {
+                    message.setText("Please use a valid input.");
+                }
             }
             if (!length2Input.getText().equalsIgnoreCase("") && pendNum == 2) {
-                L2 = Double.parseDouble(length2Input.getText());
+                double temp = Double.parseDouble(length2Input.getText());
+                if (temp > 0) {
+                    L2 = temp;
+                } else {
+                    message.setText("Please use a valid input.");
+                }
             }
             if (!length3Input.getText().equalsIgnoreCase("") && pendNum == 3) {
-                L2 = Double.parseDouble(mass2Input.getText());
-                L3 = Double.parseDouble(mass3Input.getText());
+
+                double temp = Double.parseDouble(length2Input.getText());
+                if (temp > 0) {
+                    L2 = temp;
+                } else {
+                    message.setText("Please use a valid input.");
+                }
+                temp = Double.parseDouble(length3Input.getText());
+                if (temp > 0) {
+
+                } else {
+                    message.setText("Please use a valid input.");
+                }
             }
 
         } catch (Exception e) {
@@ -565,12 +733,7 @@ public class FXMLDocumentController implements Initializable {
                 m2 = Double.parseDouble(mass2Input.getText());
                 p2.setRadius(m2);
             }
-            if (!mass3Input.getText().equalsIgnoreCase("") && pendNum == 3) {
-                m2 = Double.parseDouble(mass2Input.getText());
-                p2.setRadius(m2);
-                m3 = Double.parseDouble(mass3Input.getText());
-                p3.setRadius(m3);
-            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             message.setText("Please enter valid mass values.");
@@ -579,31 +742,42 @@ public class FXMLDocumentController implements Initializable {
 
     public void updateAngles() {
 
-        angle1Text.setText("Angle 1: " + (double) Math.round(((angle1 * 180 / pi()) * 10000d) / 10000d) % 360.0000 + "°");
-        angularVelocity1Text.setText("Angular Velocity 1: " + (double) Math.round((vel1 * 180 / pi()) * 10000d) / 10000d + " rad/s");
-        angularAcceleration1Text.setText("Angular Acceleration 1: " + (double) Math.round((acc1 * 180 / pi()) * 10000d) / 10000d + " rad/s2");
+        double an1 = angle1 * 180 / pi();
+        an1 = an1 % 360;
+        an1 = Math.round(an1 * 100.0) / 100.0;
+        angle1Text.setText("Angle 1: " + an1 + "°");
+
+        double ve1 = vel1 * 180 / pi();
+        ve1 = Math.round(ve1 * 100.0) / 100.0;
+        angularVelocity1Text.setText("Angular Velocity 1: " + ve1 + " rad/s");
+
+        double ac1 = acc1 * 180 / pi();
+        ac1 = Math.round(ac1 * 100.0) / 100.0;
+        angularAcceleration1Text.setText("Angular Acceleration 1: " + ac1 + " rad/s2");
 
         angle2Text.setText("Angle 2: ");
         angularVelocity2Text.setText("Angular Velocity 2: ");
         angularAcceleration2Text.setText("");
 
-        angle3Text.setText("Angle 3: ");
-        angularVelocity3Text.setText("Angular Velocity 3: ");
-        angularAcceleration3Text.setText("");
+        if (pendNum >= 2) {
+            double an2 = angle2 * 180 / pi();
+            an2 = an2 % 360;
+            an2 = Math.round(an2 * 100.0) / 100.0;
+            angle2Text.setText("Angle 2: " + an2 + "°");
 
-        if (pendNum == 2) {
-            angle2Text.setText("Angle 2: " + (double) Math.round(((angle2 * 180 / pi()) * 10000d) / 10000d) % 360.0000 + "°");
-            angularVelocity2Text.setText("Angular Velocity 2: " + (double) Math.round((vel2 * 180 / pi()) * 10000d) / 10000d + " rad/s");
-            angularAcceleration2Text.setText("Angular Acceleration 2: " + (double) Math.round((acc2 * 180 / pi()) * 10000d) / 10000d + " rad/s2");
-        }
-        if (pendNum == 3) {
-            angle2Text.setText("Angle 2: " + (double) Math.round(((angle2 * 180 / pi()) * 10000d) / 10000d) % 360.0000 + "°");
-            angularVelocity2Text.setText("Angular Velocity 2: " + (double) Math.round((vel2 * 180 / pi()) * 10000d) / 10000d + " rad/s");
-            angularAcceleration2Text.setText("Angular Acceleration 2: " + (double) Math.round((acc2 * 180 / pi()) * 10000d) / 10000d + " rad/s2");
+            double ve2 = vel2 * 180 / pi();
+            ve2 = Math.round(ve2 * 100.0) / 100.0;
+            angularVelocity2Text.setText("Angular Velocity 2: " + ve2 + " rad/s");
 
-            angle3Text.setText("Angle 3: " + (double) Math.round(((angle3 * 180 / pi()) * 10000d) / 10000d) % 360.0000 + "°");
-            angularVelocity3Text.setText("Angular Velocity 3: " + (double) Math.round((vel3 * 180 / pi()) * 10000d) / 10000d + " rad/s");
-            angularAcceleration3Text.setText("Angular Acceleration 3: " + (double) Math.round((acc3 * 180 / pi()) * 10000d) / 10000d + " rad/s2");
+            double ac2 = acc2 * 180 / pi();
+            ac2 = Math.round(ac2 * 100.0) / 100.0;
+            angularAcceleration2Text.setText("Angular Acceleration 2: " + ac2 + " rad/s2");
+            if (pendNum == 3) {
+                angle2Text.setText("Angle 2: " + (double) Math.round(((angle2 * 180 / pi()) * 10000d) / 10000d) % 360.0000 + "°");
+                angularVelocity2Text.setText("Angular Velocity 2: " + (double) Math.round((vel2 * 180 / pi()) * 10000d) / 10000d + " rad/s");
+                angularAcceleration2Text.setText("Angular Acceleration 2: " + (double) Math.round((acc2 * 180 / pi()) * 10000d) / 10000d + " rad/s2");
+
+            }
         }
     }
 
@@ -614,9 +788,7 @@ public class FXMLDocumentController implements Initializable {
             line2.setVisible(false);
         } else if (amount2.isSelected()) {
             pendNum = 2;
-        } else if (amount3.isSelected()) {
-            pendNum = 3;
-        }
+        } 
     }
 
     public void fade() {
@@ -636,6 +808,7 @@ public class FXMLDocumentController implements Initializable {
 
             Point2D diff = new Point2D(screenOrigin.getX() - event.getSceneX(), screenOrigin.getY() - event.getSceneY());
             angle2 = Math.atan2(-1 * diff.getY(), diff.getX()) - pi() / 2;
+            initialAngle2 = angle2;
             vel2 = 0;
             p2.setCenterX(L2 * sin(angle2) + p1.getCenterX());
             p2.setCenterY(L2 * cos(angle2) + p1.getCenterY());
@@ -693,6 +866,8 @@ public class FXMLDocumentController implements Initializable {
         @Override
         public void handle(MouseEvent event) {
             a.stop();
+            initialAngle1 = angle1;
+            initialAngle2 = angle2;
             isPlaying = false;
         }
     };
