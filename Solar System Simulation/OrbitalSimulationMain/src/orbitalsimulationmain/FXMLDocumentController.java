@@ -65,9 +65,6 @@ public class FXMLDocumentController implements Initializable {
 	String objectType;
 	String presetType;
 
-//	Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-//	final double screenWidth = screen.getWidth() - 10;
-//    final double screenHeight = screen.getHeight() - 40;
 	@FXML
 	private AnchorPane UI; //REMOVE STATIC?
 
@@ -78,9 +75,9 @@ public class FXMLDocumentController implements Initializable {
 	@FXML
 	private Button buttonTime500;
 	@FXML
-	private Button buttonClearPane;
-	@FXML
 	private Button buttonCreateObject;
+	@FXML
+	private Button buttonClearScreen;
 
 	@FXML
 	private Label labelMass;
@@ -290,19 +287,23 @@ public class FXMLDocumentController implements Initializable {
 		//Depending on the checkbox chosen, the parameters of the celestial body will be different
 		if (checkBoxEarth.isSelected()) {
 			presetType = "earth";
-			textFieldMass.setText("0.0003");
+			textFieldMass.setText("0.003");
 			textFieldRadius.setText("5");
 		} else if (checkBoxSun.isSelected()) {
 			presetType = "sun";
 			textFieldMass.setText("100");
-			textFieldRadius.setText("300");
+			textFieldRadius.setText("100");
 		} else if (checkBoxPhiOrionis.isSelected()) {
 			presetType = "phi";
-			textFieldMass.setText("1800");
-			textFieldRadius.setText("7.4");
+			textFieldMass.setText("180");
+			textFieldRadius.setText("200");
 		}
 	}
-
+	
+	@FXML
+	private void handleClearScreenButtonAction(ActionEvent ae) {
+		clearPane(cbArrayList);
+	}
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		//This will ensure that the GUI is *never* covered up!
@@ -315,8 +316,11 @@ public class FXMLDocumentController implements Initializable {
 //		BackgroundSize backgroundSize = new BackgroundSize(1218, 690, false, false, false, false);
 //		//set background gif
 //		UI.setBackground(AssetManager.getBackgroundImage(backgroundSize));
+		
 		//fills in button color
 		buttonCreateObject.setStyle("-fx-background-color: #00ff00; ");
+		
+		//Sets the rectangle containing all 
 		rect.toBack();
 
 		//Adds Planet, Star and Asteroid checkboxes to ArrayList
@@ -350,8 +354,8 @@ public class FXMLDocumentController implements Initializable {
 
 					for (int i = 0; i < cbArrayList.size(); i++) {
 						//force in the opposite direction. To be applied on the other body so that they move towards each other, and not in the same direction
-
-						Vector2D antiGravForce = gravitationalForce.mult(-1);
+						
+						Vector2D antiGravForce = SimulationPhysics.newtonsLawOtherBody(cbArrayList.get(1), cbArrayList.get(0));
 						if (i == 1) {
 							Vector2D newTangentialVelocity = cbArrayList.get(i).getTangentialVelocity().add(gravitationalForce.mult(deltaTime));
 							Vector2D newPosition = cbArrayList.get(i).getCoordinates().add(newTangentialVelocity.mult(deltaTime));
@@ -369,9 +373,8 @@ public class FXMLDocumentController implements Initializable {
 							cbArrayList.get(i).setCenterX(newPosition.getX());
 							cbArrayList.get(i).setCenterY(newPosition.getY());
 						}
-						//Collision handling                    
-						if (cbArrayList.get(0).getBoundsInParent().intersects(cbArrayList.get(1).getBoundsInParent())) {
-							System.out.println("COLLIDED");
+						//Collision handling, if the distance between both bodies is less than or equal to the sum of their radii, then they are colliding, and it must be handled.                     
+						if (Math.hypot((cbArrayList.get(1).getCenterX() - cbArrayList.get(0).getCenterX()),(cbArrayList.get(1).getCenterY() - cbArrayList.get(0).getCenterY())) <=(cbArrayList.get(0).getRadius() + cbArrayList.get(1).getRadius())) {
 							handleCollisions(cbArrayList);
 						}
 					}
@@ -395,8 +398,8 @@ public class FXMLDocumentController implements Initializable {
 	}
 
 	/**
-	 * Will be used for the 'Clear pane ' button in order to delete all
-	 * CelestialBodies on the screen.
+	 * Will be used for the 'Clear pane ' button.
+	 * Removes all CelestialBodies on the screen.
 	 *
 	 * @param arrayListCB an ArrayList containing all the celestial bodies on
 	 * the screen
@@ -407,9 +410,7 @@ public class FXMLDocumentController implements Initializable {
 			removeNodeList.add(cb);
 			deadList.add(cb);
 		}
-		
 	}
-
 	/**
 	 * Adds an object to the pane to be visible
 	 *
@@ -429,7 +430,7 @@ public class FXMLDocumentController implements Initializable {
 	}
 
 	/**
-	 * This method deals with the event that a collision happens between 2
+	 * This method deals with the event that a collision happens between 2 bodies
 	 *
 	 * @param cbAL ArrayList of all celestial bodies added to the UI
 	 */
@@ -465,8 +466,8 @@ public class FXMLDocumentController implements Initializable {
 1) SHOW VECTORS OF MOTION OF PLANETS
 6) ADD A GIF TO BACKGROUND (REEEEE)
 9) LIMIT RADIUS TO >=3
-10) OUT OF SCREEN BOUNDS HANDLING
 11) MAKE SURE TO ADD INSTRUCTIONS TO THE GUI. FILL IN TEXTFIELDS, CLICK ON OBJECT/PRESET TYPE, CLICK GREEN BUTTON, THEN PUT ON GUI.
 13) CLEAN UP CODE!!!
 15) BE ABLE TO ADD MORE ASTEROIDS!
+!!!!!!!!!!!CREATE 2 NEW SCENARIOS!!
  */
