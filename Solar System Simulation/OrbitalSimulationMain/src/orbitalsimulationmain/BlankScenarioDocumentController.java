@@ -14,7 +14,6 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,17 +22,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
  *
  * @author cstuser
  */
-public class FXMLDocumentController implements Initializable {
+public class BlankScenarioDocumentController implements Initializable {
 
 	ArrayList<CheckBox> objectArrayList = new ArrayList<>();
 	ArrayList<CheckBox> presetArrayList = new ArrayList<>();
@@ -287,7 +286,7 @@ public class FXMLDocumentController implements Initializable {
 		//Depending on the checkbox chosen, the parameters of the celestial body will be different
 		if (checkBoxEarth.isSelected()) {
 			presetType = "earth";
-			textFieldMass.setText("0.003");
+			textFieldMass.setText("0.009");
 			textFieldRadius.setText("5");
 		} else if (checkBoxSun.isSelected()) {
 			presetType = "sun";
@@ -312,15 +311,16 @@ public class FXMLDocumentController implements Initializable {
 		//Preloads all assets for project
 		AssetManager.preloadAllAssets();
 
-//		//Creates a background size to input into the getBackgroundImage method
-//		BackgroundSize backgroundSize = new BackgroundSize(1218, 690, false, false, false, false);
-//		//set background gif
-//		UI.setBackground(AssetManager.getBackgroundImage(backgroundSize));
+		//Creates a background size to input into the getBackgroundImage method
+		BackgroundSize backgroundSize = new BackgroundSize(1218, 690, false, false, false, false);
+		Background background = AssetManager.getBackgroundImage(backgroundSize);
+		//set background gif
+		UI.setBackground(background);
 		
 		//fills in button color
 		buttonCreateObject.setStyle("-fx-background-color: #00ff00; ");
 		
-		//Sets the rectangle containing all 
+		//Sets the blue rectangle to the back of the pane, behind all components of the UI pne.
 		rect.toBack();
 
 		//Adds Planet, Star and Asteroid checkboxes to ArrayList
