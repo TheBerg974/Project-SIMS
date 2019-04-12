@@ -8,7 +8,7 @@
    <children>
       <Label fx:id="labelMainMenu" layoutX="212.0" layoutY="90.0" text="Choose what scenario you prefer:" />
       <Button fx:id="buttonBlankScenario" layoutX="81.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonBlankScenarioAction" text="Blank scenario" />
-      <Button fx:id="buttonEarthMoon" layoutX="228.0" layoutY="209.0" mnemonicParsing="false" text="Earth-Moon simulation" />
+      <Button fx:id="buttonEarthMoon" layoutX="228.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonEarthMoonAction" text="Earth-Moon simulation" />
       <Button fx:id="buttonEarthSun" layoutX="429.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonEarthSunAction" text="Earth-Sun simulation" />
    </children>
 </AnchorPane>

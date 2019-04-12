@@ -11,7 +11,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -22,10 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -33,7 +29,7 @@ import javafx.stage.Stage;
  *
  * @author Frankie
  */
-public class EarthSunDocumentController implements Initializable {
+public class EarthMoonDocumentController implements Initializable {
 
 	ArrayList<CheckBox> objectArrayList = new ArrayList<>();
 	ArrayList<CheckBox> presetArrayList = new ArrayList<>();
@@ -113,16 +109,18 @@ public class EarthSunDocumentController implements Initializable {
 //		//set background gif
 //		UI.setBackground(background);
 		
-		CelestialBody Sun = new CelestialBody(new Vector2D(0,0),100,100, new Vector2D(600, 450));
-		CelestialBody Earth = new CelestialBody(new Vector2D(155,0),0.009,10, new Vector2D(575, 725));
-		Earth.setFill(AssetManager.getEarthImage());
-		Sun.setFill(AssetManager.getSunImage());
+		CelestialBody Moon = new CelestialBody(new Vector2D(50,0),0.12,27, new Vector2D(575, 725));
+		CelestialBody Earth = new CelestialBody(new Vector2D(0,0),10,100, new Vector2D(600, 450));
 		
-		cbArrayList.add(Sun);
+		Earth.setFill(AssetManager.getEarthImage());
+		Moon.setFill(AssetManager.getMarsImage()); //Get a moon image
+		
+		cbArrayList.add(Moon);
 		cbArrayList.add(Earth);
 		
 		addToPane(Earth);
-		addToPane(Sun);
+		addToPane(Moon);
+		
 		//Time value when simulation begins
 		long initialTime = System.nanoTime();
 
@@ -246,5 +244,5 @@ public class EarthSunDocumentController implements Initializable {
 			}
 		}
 	}
+	
 }
-

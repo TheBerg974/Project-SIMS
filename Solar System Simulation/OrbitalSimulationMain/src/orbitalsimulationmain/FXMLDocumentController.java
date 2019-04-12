@@ -32,7 +32,7 @@ import javafx.stage.Stage;
  *
  * @author cstuser
  */
-public class BlankScenarioDocumentController implements Initializable {
+public class FXMLDocumentController implements Initializable {
 
 	ArrayList<CheckBox> objectArrayList = new ArrayList<>();
 	ArrayList<CheckBox> presetArrayList = new ArrayList<>();
@@ -135,6 +135,7 @@ public class BlankScenarioDocumentController implements Initializable {
 		try {
 			if (cbArrayList.size() < 2) {
 				CelestialBody cb = new CelestialBody(new Vector2D(velocityX, velocityY), mass, radius, new Vector2D(me.getSceneX(), me.getSceneY()));
+				//If one of 3 preset checkboxes were NOT selected, then the objectType variable can only have 3 choices, based on what object type checkbox the user selects
 				if (!presetSelected) {
 					switch (objectType) {
 						case "planet":

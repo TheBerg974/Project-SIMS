@@ -38,6 +38,8 @@ public class MainMenuDocumentController implements Initializable {
 	
 	@FXML
 	private Button buttonEarthMoon;
+	
+	@FXML
 	public void handleButtonBlankScenarioAction(ActionEvent ae) {		    
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
@@ -53,7 +55,7 @@ public class MainMenuDocumentController implements Initializable {
 			Logger.getLogger(MainMenuDocumentController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}	
-	
+	@FXML
 	public void handleButtonEarthSunAction(ActionEvent ae) {		    
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("EarthSunDocument.fxml"));
@@ -61,7 +63,24 @@ public class MainMenuDocumentController implements Initializable {
 			Scene scene = new Scene(root);
 			
 			stage.setScene(scene);
-			stage.setTitle("Orbital Simulator");
+			stage.setTitle("Orbital Simulator (Earth-Sun system)");
+			scene.getRoot().requestFocus();
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException ex) {
+			Logger.getLogger(MainMenuDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	public void handleButtonEarthMoonAction(ActionEvent ae) {		    
+		try {
+			Parent root = FXMLLoader.load(getClass().getResource("EarthMoonDocument.fxml"));
+			Stage stage = new Stage();
+			Scene scene = new Scene(root);
+			
+			stage.setScene(scene);
+			stage.setTitle("Orbital Simulator (Earth-Moon system)");
 			scene.getRoot().requestFocus();
 			stage.setResizable(false);
 			stage.show();
