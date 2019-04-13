@@ -97,7 +97,7 @@ public class EarthMoonDocumentController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		//This will ensure that the GUI is *never* covered up!
+		//This will ensure that the components are *never* covered up!
 		UI.toBack();
 
 		//Preloads all assets for project
