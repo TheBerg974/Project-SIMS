@@ -16,13 +16,13 @@ import javafx.stage.Stage;
  * @author cstuser
  */
 public class OrbSimGUI extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenuDocument.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         scene.getRoot().requestFocus();
         stage.setResizable(false);
@@ -33,8 +33,7 @@ public class OrbSimGUI extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
         launch(args);
     }
-    
+
 }

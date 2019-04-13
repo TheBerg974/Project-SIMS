@@ -15,7 +15,8 @@ public class CelestialBody extends Circle{
     protected Vector2D tangentialVelocity;
     protected double mass;
     protected double radius;
-    protected Vector2D coordinates;       
+    public Vector2D coordinates;
+    public Vector2D gravityForce = new Vector2D(0,0);
     
     public CelestialBody(Vector2D tangentialVelocity, double mass, double radius, Vector2D coordinates) {
         super(coordinates.getX(), coordinates.getY(), radius);
