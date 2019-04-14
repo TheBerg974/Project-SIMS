@@ -21,6 +21,8 @@ import javafx.scene.paint.ImagePattern;
 public class AssetManager {
 
 	private static Background backgroundGif = null;
+	
+	private static Background usaBackground = null;
 
 	private static ImagePattern earthImage;
 
@@ -38,13 +40,13 @@ public class AssetManager {
 
 	private static ImagePattern michaelBayExplosionImage;
 
-	private static ImagePattern michaelBayPointingImage;
+	private static Image michaelBayPointingImage;
 
 	private static ImagePattern michaelBayGangsterImage;
 
 	private static ImagePattern genericExplosionImage;
 
-	private static ImagePattern usaFlagImage;
+	private static Image usaFlagImage;
 
 	private static Image background;
 
@@ -78,11 +80,12 @@ public class AssetManager {
 		asteroidImage = new ImagePattern(new Image(fileURL("./assets/images/asteroid.png")));
 
 		//Michael Bay mode images
-		michaelBayExplosionImage = new ImagePattern(new Image(fileURL("./assets/images/bay_explosion.png")));
-		michaelBayPointingImage = new ImagePattern(new Image(fileURL("./assets/images/bay_pointing.png")));
-		michaelBayGangsterImage = new ImagePattern(new Image(fileURL("./assets/images/bay_gangster.png")));
+		michaelBayExplosionImage = new ImagePattern(new Image(fileURL("./assets/images/bay_explosion.jpg")));
+		michaelBayPointingImage = new Image(fileURL("./assets/images/bay_pointing.jpg"));
+		michaelBayGangsterImage = new ImagePattern(new Image(fileURL("./assets/images/bay_gangster.jpg")));
 		genericExplosionImage = new ImagePattern(new Image(fileURL("./assets/images/generic_explosion.png")));
-		usaFlagImage = new ImagePattern(new Image(fileURL("./assets/images/usa_flag.png")));
+		usaFlagImage = new Image(fileURL("./assets/images/usa_flag.jpg"));
+		usaBackground = new Background(new BackgroundImage(usaFlagImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT));
 	}
 
 	public static Background getBackgroundImage() {
@@ -90,6 +93,11 @@ public class AssetManager {
 		return new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
 	}
 
+	public static Background getUsaBackground() {
+		BackgroundSize backgroundSize = new BackgroundSize(250, 30, false, false, false, false);
+        return new Background(new BackgroundImage(usaFlagImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
+	}
+	
 	public static ImagePattern getEarthImage() {
 		return earthImage;
 	}
@@ -122,7 +130,7 @@ public class AssetManager {
 		return michaelBayExplosionImage;
 	}
 
-	public static ImagePattern getMichaelBayPointingImage() {
+	public static Image getMichaelBayPointingImage() {
 		return michaelBayPointingImage;
 	}
 
@@ -134,7 +142,7 @@ public class AssetManager {
 		return genericExplosionImage;
 	}
 
-	public static ImagePattern getUsaFlagImage() {
+	public static Image getUsaFlagImage() {
 		return usaFlagImage;
 	}
 

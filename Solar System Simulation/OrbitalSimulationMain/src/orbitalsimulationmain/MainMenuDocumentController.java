@@ -29,9 +29,10 @@ import javafx.stage.Stage;
  * @author Frankie
  */
 public class MainMenuDocumentController implements Initializable {
-	
+
 	Font MICHAEL_BAY_MODE = new Font("Times New Roman", 14);
-	
+	Font simulationFont = new Font("Times new Roman", 12);
+
 	@FXML
 	private Label labelMainMenu;
 
@@ -46,6 +47,15 @@ public class MainMenuDocumentController implements Initializable {
 
 	@FXML
 	private Button buttonMichaelBayMode;
+
+	@FXML
+	private ImageView leftImage;
+
+	@FXML
+	private ImageView rightImage;
+
+	@FXML
+	private ImageView backgroundImage;
 
 	@FXML
 	public void handleButtonBlankScenarioAction(ActionEvent ae) {
@@ -103,17 +113,25 @@ public class MainMenuDocumentController implements Initializable {
 		try {
 			FXMLDocumentController.michaelBayModeEnabled = !FXMLDocumentController.michaelBayModeEnabled;
 			if (FXMLDocumentController.michaelBayModeEnabled) {
-				//Sets a special font and color if Michael Bay Mode is enabled
-				buttonMichaelBayMode.setStyle("-fx-background-color: #FFA500; ");
+				//Sets a special font and button image if Michael Bay Mode is enabled
+				buttonMichaelBayMode.setBackground(AssetManager.getUsaBackground());
+
+				//Changes text of enable michael bay mode button
 				Label labelBayModeYes = new Label();
 				labelBayModeYes.setFont(MICHAEL_BAY_MODE);
 				labelBayModeYes.setText("MICHAEL BAY MODE ENABLED");
 				buttonMichaelBayMode.setText(labelBayModeYes.getText());
-				
-				
+				buttonMichaelBayMode.setFont(MICHAEL_BAY_MODE);
+
+				//Changes text of main menu label
 				labelMainMenu.setText(labelBayModeYes.getText());
-				labelBayModeYes.setFont(MICHAEL_BAY_MODE);
-				
+				labelMainMenu.setFont(MICHAEL_BAY_MODE);
+
+//				//Sets leftmost image view
+//				leftImage.setImage(AssetManager.getMichaelBayPointingImage());
+//				//Sets rightmost image view
+//				rightImage.setImage(AssetManager.getRunAwayGif());
+				//Loads Michael Bay mode window
 				Parent root = FXMLLoader.load(getClass().getResource("MichaelBayMode.fxml"));
 				Stage stage = new Stage();
 				Scene scene = new Scene(root);
@@ -123,14 +141,16 @@ public class MainMenuDocumentController implements Initializable {
 				scene.getRoot().requestFocus();
 				stage.setResizable(false);
 				stage.show();
-			} else {
-				//BackgroundImage usaFlag = new BackgroundImage(new Image(getClass().getResource(AssetManager.getUsaFlagImage().toString()).toExternalForm()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-				//Background usa = new Background(usaFlag);
-				//buttonMichaelBayMode.setGraphic(new ImageView(AssetManager.getUsaFlagImage()));
-				buttonMichaelBayMode.setStyle("-fx-background-color: #F5F5F5; ");
+
+				System.out.println("Bay Mode-true");
+
+			} else if (!FXMLDocumentController.michaelBayModeEnabled) {
+				buttonMichaelBayMode.setStyle("-fx-background-color: #FFA500; ");
 				buttonMichaelBayMode.setText("Enable Michael Bay Mode");
-				
+
 				labelMainMenu.setText("Choose what scenario you prefer");
+
+				System.out.println("Bay mdoe false");
 			}
 		} catch (IOException ex) {
 			Logger.getLogger(MainMenuDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -142,7 +162,27 @@ public class MainMenuDocumentController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		AssetManager.preloadAllAssets();
 		buttonMichaelBayMode.setText("Enable Michael Bay Mode");
+		//buttonMichaelBayMode.setStyle("-fx-background-color: #FFA500; ");	
+
+		Label label = new Label();
+		label.setFont(simulationFont);
+		label.setText("Blank Scenario");
+		buttonBlankScenario.setText(label.getText());
+		buttonBlankScenario.setFont(simulationFont);
+
+		Label label1 = new Label();
+		label1.setFont(simulationFont);
+		label1.setText("Earth-Moon System");
+		buttonEarthMoon.setText(label1.getText());
+		buttonEarthMoon.setFont(simulationFont);
+
+		Label label2 = new Label();
+		label2.setFont(simulationFont);
+		label2.setText("Earth-Sun System");
+		buttonEarthSun.setText(label2.getText());
+		buttonEarthSun.setFont(simulationFont);
 	}
 
 }
