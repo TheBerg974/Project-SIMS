@@ -10,5 +10,6 @@
       <Button fx:id="buttonBlankScenario" layoutX="81.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonBlankScenarioAction" text="Blank scenario" />
       <Button fx:id="buttonEarthMoon" layoutX="228.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonEarthMoonAction" text="Earth-Moon simulation" />
       <Button fx:id="buttonEarthSun" layoutX="429.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonEarthSunAction" text="Earth-Sun simulation" />
+      <Button fx:id="buttonMichaelBayMode" layoutX="175.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleButtonMichaelBayModeAction" prefHeight="26.0" prefWidth="250.0" text="Enable Michael Bay Mode" />
    </children>
 </AnchorPane>
