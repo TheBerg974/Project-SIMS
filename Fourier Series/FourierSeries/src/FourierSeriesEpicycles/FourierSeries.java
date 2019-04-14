@@ -52,7 +52,6 @@ public class FourierSeries extends Application {
         window.setScene(scene);
         p.requestFocus();
         window.show();
-        System.out.println("Called");
     }
 
 }
