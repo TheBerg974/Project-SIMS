@@ -8,15 +8,13 @@ public class Mast {
 
     Circle circle;
 
-    public Mast() //// work on the randomizer
-    {
-        Random random = new Random();
-        circle = new Circle(10);
-        circle.setCenterX(random.nextInt(2000));
-        circle.setCenterY(random.nextInt(1000));
+    public Mast(double posX, double posY) {
+        circle = new Circle(10);        
+        circle.setCenterX(posX);
+        circle.setCenterY(posY);
         circle.setFill(AssetManager.mastSkin(false));
     }
-
+    
     public Circle getCircle() {
         return circle;
     }

@@ -29,7 +29,7 @@ public class AssetManager {
     final double screenHeight = screenBounds.getHeight() - 40;
 
     //background    
-    static private Image background;
+    static protected Image background;
     static private Image menuBackground;
     //information menu background
     static private ImagePattern menuBack;
@@ -114,6 +114,20 @@ public class AssetManager {
     static private ImagePattern orbLine3;
     static private ImagePattern orbLine4;
 
+    //**// BUTTONS //**// 
+    //redw bird
+    static private Image buttonRedBirdDown;
+    static private Image buttonRedBirdMid;
+    static private Image buttonRedBirdUp;
+    // predator
+    static private Image buttonPredatorDown;
+    static private Image buttonPredatorLowMid;
+    static private Image buttonPredatorHighMid;
+    static private Image buttonPredatorHigh;
+    //scroll
+    static private Image scroll;
+
+
     //arraylist for animating sprites
     static private ArrayList<ImagePattern> yellowBirdArray = new ArrayList<ImagePattern>();
     static private ArrayList<ImagePattern> blueBirdArray = new ArrayList<ImagePattern>();
@@ -129,6 +143,11 @@ public class AssetManager {
     static private ArrayList<ImagePattern> player2Orb = new ArrayList<ImagePattern>();
     static private ArrayList<ImagePattern> player3Orb = new ArrayList<ImagePattern>();
     static private ArrayList<ImagePattern> player4Orb = new ArrayList<ImagePattern>();
+
+    static private ArrayList<Image> buttonBoid = new ArrayList<>();
+    static private ArrayList<Image> buttonPredator = new ArrayList<>();
+    static private ArrayList<Image> buttonPlayer = new ArrayList<>();
+    static private ArrayList<Image> buttonArena = new ArrayList<>();
 
     static private String fileURL(String relativePath) {
         return new File(relativePath).toURI().toString();
@@ -324,6 +343,45 @@ public class AssetManager {
         player4Orb.add(new ImagePattern(new Image(fileURL("./assets/Player-4/P-1 A-7.png"))));
         player4Orb.add(new ImagePattern(new Image(fileURL("./assets/Player-4/P-1 A-8.png"))));
 
+        //**// BUTTONS //**//
+        //boids
+        buttonRedBirdDown = new Image(fileURL("./assets/Button/redbird-downflap.png"));
+        buttonRedBirdMid = new Image(fileURL("./assets/Button/redbird-midflap.png"));
+        buttonRedBirdUp = new Image(fileURL("./assets/Button/redbird-upflap.png"));
+        //predator
+        buttonPredatorDown = new Image(fileURL("./assets/Button/Flipped-Predator-1.png"));
+        buttonPredatorLowMid = new Image(fileURL("./assets/Button/Flipped-Predator-2.png"));
+        buttonPredatorHighMid = new Image(fileURL("./assets/Button/Flipped-Predator-3.png"));
+        buttonPredatorHigh = new Image(fileURL("./assets/Button/Flipped-Predator-4.png"));
+
+
+        //add sprites to red bird arraylist
+        buttonBoid.add(buttonRedBirdMid);
+        buttonBoid.add(buttonRedBirdUp);
+        buttonBoid.add(buttonRedBirdMid);
+        buttonBoid.add(buttonRedBirdDown);
+        //add sprited to predator arraylist
+        buttonPredator.add(buttonPredatorLowMid);
+        buttonPredator.add(buttonPredatorHighMid);
+        buttonPredator.add(buttonPredatorHigh);
+        buttonPredator.add(buttonPredatorHighMid);
+        buttonPredator.add(buttonPredatorLowMid);
+        buttonPredator.add(buttonPredatorDown);
+        //add sprites to player arraylist
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-1.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-2.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-3.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-4.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-5.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-6.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-7.png")));
+        buttonPlayer.add(new Image(fileURL("./assets/Button/P-1 A-8.png")));
+        //add sprites to the arena arraylist
+        buttonArena.add(new Image(fileURL("./assets/Button/Spike1.png")));
+        buttonArena.add(new Image(fileURL("./assets/Button/Spike2.png")));
+        //scroll
+        scroll = new Image(fileURL("./assets/Button/scroll2.png"));
+
     }
 
     //returns the background image according to the size of the screen
@@ -409,7 +467,7 @@ public class AssetManager {
             return springBounced;
         }
     }
-    
+
     //returns spike skin 
     static public ImagePattern spikeSkin(int location) {
         switch (location) {
@@ -502,5 +560,36 @@ public class AssetManager {
                 return orbLine4;
         }
         return null;
+    }
+
+    //**//BUTTONS
+    //boid button
+    static public Background getButtonBoid(int animation, double width, double height) {
+        final BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, false, false);
+        return new Background(new BackgroundImage(buttonBoid.get(animation), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
+    }
+
+    //predator button
+    static public Background getButtonPredator(int animation, double width, double height) {
+        final BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, false, false);
+        return new Background(new BackgroundImage(buttonPredator.get(animation), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
+    }
+
+    //player button
+    static public Background getButtonPlayer(int animation, double width, double height) {
+        final BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, false, false);
+        return new Background(new BackgroundImage(buttonPlayer.get(animation), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
+    }
+    
+    //arena button
+    static public Background getButtonArena(int animation, double width, double height) {
+        final BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, false, false);
+        return new Background(new BackgroundImage(buttonArena.get(animation), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
+    }
+    
+    //how to playe button
+    static public Background getButtonDefault(double width, double height) {
+        final BackgroundSize backgroundSize = new BackgroundSize(width, height, false, false, false, false);
+        return new Background(new BackgroundImage(scroll, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
     }
 }

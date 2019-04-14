@@ -1,24 +1,27 @@
 package boidsgame;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 public class ArenaSetup {
+
     //size of screen    
+
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
     final double screenWidth = screenBounds.getWidth() - 10;
     final double screenHeight = screenBounds.getHeight() - 40;
 
     //Arena inputs
-    static double time = 60;
+    static double time = 10;
     static int numberOfMasts = 20;
     static double mastRadius = 50;
     static int numberOfSprings = 30;
     static double springiness = 1.2;
-    static double springRadius = 50;
+    static double springRadius = 70;
 
     //Predator inputs
     static double maxForcePredator = 0.5;
@@ -44,16 +47,29 @@ public class ArenaSetup {
     static double maxForceBoid = 0.05;
     static double maxSpeedBoid = 3;
     static int nbOfBoids = 600;
-    static boolean isDifferentMass = true;
+    static boolean differentMass = false;
 
     //Player inputs 
-    static double gravity = 0.4;
-    static double friction = 1;
-    static boolean isPlayer1Playing = true;
-    static boolean isPlayer2Playing = false;
-    static boolean isPlayer3Playing = false;
-    static boolean isPlayer4Playing = false;
-
+    static double gravity = 9.8;
+    static double friction = 5;
+    static boolean Player1Playing = true;
+    static boolean Player2Playing = false;
+    static boolean Player3Playing = false;
+    static boolean Player4Playing = false;
+    
+    static public Player p1 = new Player(1);
+    static public Player p2 = new Player(2);
+    static public Player p3 = new Player(3);
+    static public Player p4 = new Player(4);
+    static boolean isGameOver = false;
+    static ArrayList<Integer> winnerPlayer = new ArrayList<>();
+    
+    public static void clearWinner()
+    {
+       winnerPlayer = new ArrayList<>();
+    }
+    
+    
     //Predator getters and setters
     public static int getNumberOfPredators() {
         return numberOfPredators;
@@ -249,12 +265,12 @@ public class ArenaSetup {
         ArenaSetup.nbOfBoids = nbOfBoids;
     }
 
-    public static boolean isIsDifferentMass() {
-        return isDifferentMass;
+    public static boolean isDifferentMass() {
+        return differentMass;
     }
 
-    public static void setIsDifferentMass(boolean isDifferentMass) {
-        ArenaSetup.isDifferentMass = isDifferentMass;
+    public static void setDifferentMass(boolean differentMass) {
+        ArenaSetup.differentMass = differentMass;
     }
 
     //Player getters and setters 
@@ -274,35 +290,35 @@ public class ArenaSetup {
         ArenaSetup.friction = friction;
     }
 
-    public static boolean isIsPlayer1Playing() {
-        return isPlayer1Playing;
+    public static boolean isPlayer1Playing() {
+        return Player1Playing;
     }
 
-    public static void setIsPlayer1Playing(boolean isPlayer1Playing) {
-        ArenaSetup.isPlayer1Playing = isPlayer1Playing;
+    public static void setPlayer1Playing(boolean Player1Playing) {
+        ArenaSetup.Player1Playing = Player1Playing;
     }
 
-    public static boolean isIsPlayer2Playing() {
-        return isPlayer2Playing;
+    public static boolean isPlayer2Playing() {
+        return Player2Playing;
     }
 
-    public static void setIsPlayer2Playing(boolean isPlayer2Playing) {
-        ArenaSetup.isPlayer2Playing = isPlayer2Playing;
+    public static void setPlayer2Playing(boolean Player2Playing) {
+        ArenaSetup.Player2Playing = Player2Playing;
     }
 
-    public static boolean isIsPlayer3Playing() {
-        return isPlayer3Playing;
+    public static boolean isPlayer3Playing() {
+        return Player3Playing;
     }
 
-    public static void setIsPlayer3Playing(boolean isPlayer3Playing) {
-        ArenaSetup.isPlayer3Playing = isPlayer3Playing;
+    public static void setPlayer3Playing(boolean Player3Playing) {
+        ArenaSetup.Player3Playing = Player3Playing;
     }
 
-    public static boolean isIsPlayer4Playing() {
-        return isPlayer4Playing;
+    public static boolean isPlayer4Playing() {
+        return Player4Playing;
     }
 
-    public static void setIsPlayer4Playing(boolean isPlayer4Playing) {
-        ArenaSetup.isPlayer4Playing = isPlayer4Playing;
+    public static void setPlayer4Playing(boolean Player4Playing) {
+        ArenaSetup.Player4Playing = Player4Playing;
     }
 }

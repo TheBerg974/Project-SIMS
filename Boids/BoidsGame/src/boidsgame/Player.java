@@ -1,7 +1,6 @@
 package boidsgame;
 
 import java.util.ArrayList;
-import javafx.scene.Node;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -17,7 +16,7 @@ public class Player {
     double originalY;
     Line string = new Line();
     Mast closestMast;
-    
+
     //projectile movement essetial variables 
     double normalVelocityX;
     double normalVelocityY;
@@ -27,20 +26,37 @@ public class Player {
 
     //player number
     int playerNumber;
+    //player score
+    int score;
 
     //player inputs (from settings)
-    double gravity = ArenaSetup.getGravity();
-    double friction = ArenaSetup.getFriction();
+    double gravity = ArenaSetup.getGravity() / 24.5;
+    double friction = 1 - ArenaSetup.getFriction() / 1000;
+
+    boolean isReal;
 
     public Player(double posX, double posY, ArrayList<Mast> points, int player) {
         circle = new Circle(25);
         circle.setCenterX(posX);
         circle.setCenterY(posY);
-        circle.setFill(Paint.valueOf("blue"));
+        circle.setFill(AssetManager.playerSwings(playerNumber));
         playerNumber = player;
+        score = 0;
 
         stringLength = Math.sqrt(Math.pow(posX - originalX, 2) + Math.pow(posY - originalY, 2));
         angle = Math.atan2(-1 * (posY - originalY), (posX - originalX)) + Math.PI / 2;
+
+        isReal = true;
+    }
+
+    public Player(int player) {
+        circle = new Circle(25);
+        circle.setCenterX(20);
+        circle.setCenterY(300);
+        circle.setFill(AssetManager.playerSwings(playerNumber)); 
+        playerNumber = player;
+        score = 0;
+        isReal = false;
     }
 
     //moves the player in a projectile movtion (when the key is not pressed)
@@ -55,11 +71,11 @@ public class Player {
 
     //moves the player in a pendulum motion (when key pressed)
     public void pendulumMotion() {
-        angularAcceleration = (-1 * gravity / stringLength) * Math.sin(angle);
+        angularAcceleration = ((-1 * gravity / stringLength) * Math.sin(angle));
         angularVelocity += angularAcceleration;
 
         //friction
-        angularVelocity *= friction;        
+        angularVelocity *= friction;
         angle += angularVelocity;
 
         //updates the player's location
@@ -74,8 +90,7 @@ public class Player {
         string.setEndX(position.getX() + originalX);
         string.setEndY(position.getY() + originalY);
         string.setStrokeWidth(1.5);
-        string.toBack(); // hides the line behind the mast and player
-
+        string.toBack();
     }
 
     //finds the mast that is closes to the player
@@ -89,6 +104,7 @@ public class Player {
                 position = validate;
             }
         }
+        check.getCircle().setFill(AssetManager.mastSkin(true));
         return check;
     }
 
@@ -155,6 +171,14 @@ public class Player {
 
     public int getPlayer() {
         return playerNumber;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public Circle getCircle() {

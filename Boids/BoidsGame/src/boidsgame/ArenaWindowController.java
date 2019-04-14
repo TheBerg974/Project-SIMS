@@ -7,9 +7,9 @@ package boidsgame;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,16 +29,8 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author Pegasus
- */
 public class ArenaWindowController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
     @FXML
     private AnchorPane panel;
 
@@ -46,6 +38,8 @@ public class ArenaWindowController implements Initializable {
     private Rectangle infoRectangle;
     @FXML
     private Button howToPlayButton;
+    @FXML
+    private Button nextPageHowToPlay;
     @FXML
     private Button gameSettingsButton;
     @FXML
@@ -71,9 +65,15 @@ public class ArenaWindowController implements Initializable {
     @FXML
     private Button applyChangesBoid;
     @FXML
+    private Button applyChangesPlayer;
+    @FXML
     private Label title;
     @FXML
     private Label information;
+    @FXML
+    Label moreInformation;
+    @FXML
+    Label moreExtraInformation;
     @FXML
     private TextField maxSpeedNormalPredator;
     @FXML
@@ -123,7 +123,19 @@ public class ArenaWindowController implements Initializable {
     @FXML
     private TextField numberOfBoids;
     @FXML
+    private TextField frictionTF;
+    @FXML
+    private TextField gravityTF;
+    @FXML
     private CheckBox differentMassesCheck;
+    @FXML
+    private CheckBox P1Plays;
+    @FXML
+    private CheckBox P2Plays;
+    @FXML
+    private CheckBox P3Plays;
+    @FXML
+    private CheckBox P4Plays;
 
     Label subtitle1;
     Label subtitle2;
@@ -141,8 +153,15 @@ public class ArenaWindowController implements Initializable {
     Label subtitle14;
     Label subtitle15;
     Label subtitle16;
-    Label subtitle17;
-    Label subtitle18;
+
+    @FXML
+    Label player1Key;
+    @FXML
+    Label player2Key;
+    @FXML
+    Label player3Key;
+    @FXML
+    Label player4Key;
 
     Rectangle picture1;
     Rectangle picture2;
@@ -153,17 +172,162 @@ public class ArenaWindowController implements Initializable {
     final double screenWidth = screenBounds.getWidth() - 10;
     final double screenHeight = screenBounds.getHeight() - 40;
 
+    //button animations
+    int counter = 0;
+    boolean onBoidsSetting = false;
+    int animationBoid = 1;
+    boolean onPredatorSettings = false;
+    int animationPredator = 0;
+    boolean onPlayerSettings = false;
+    int animationPlayer = 0;
+    boolean onArenaSettings = false;
+    int animationArena = 0;
+    boolean animationWinner = true;
+    boolean isOnResultPage = false;
+
+    boolean winnerPageNeedsUpdate = false;
+
     @FXML
     public void displayHowToPlay() {
         backButton.setVisible(false);
         howToPlayButton.setVisible(false);
         gameSettingsButton.setVisible(false);
         backToMenuButton.setVisible(true);
-        try {
-            startGame();
-        } catch (IOException ex) {
-            Logger.getLogger(ArenaWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        //set correct title
+        title.setFont(new Font("Matura MT Script Capitals", 100));
+        title.setText("how to play");
+        title.toFront();
+        title.setTextFill(Paint.valueOf("black"));
+        title.setLayoutX(260);
+        title.setLayoutY(-5);
+
+        subtitle1 = new Label();
+        subtitle1.setFont(new Font("Cooper Black", 36));
+        subtitle1.setText("Goal: Be the ghost to catch the most boids (birds)");
+        subtitle1.setLayoutX(55);
+        subtitle1.setLayoutY(190);
+        addToPane(subtitle1);
+        subtitle2 = new Label();
+        subtitle2.setFont(new Font("Cooper Black", 36));
+        subtitle2.setText("before time runs out!");
+        subtitle2.setLayoutX(185);
+        subtitle2.setLayoutY(230);
+        addToPane(subtitle2);
+        subtitle3 = new Label();
+        subtitle3.setFont(new Font("Cooper Black", 36));
+        subtitle3.setText("------------------------------------------------------------------------------------------------");
+        subtitle3.setLayoutX(20);
+        subtitle3.setLayoutY(270);
+        addToPane(subtitle3);
+        subtitle4 = new Label();
+        subtitle4.setFont(new Font("Cooper Black", 30));
+        subtitle4.setText("Boids: Little birds that fly around the arena.\nCatch as many as you can!");
+        subtitle4.setLayoutX(185);
+        subtitle4.setLayoutY(350);
+        addToPane(subtitle4);
+        subtitle5 = new Label();
+        subtitle5.setFont(new Font("Cooper Black", 30));
+        subtitle5.setText("Predators: They chase and eat the boids!");
+        subtitle5.setLayoutX(225);
+        subtitle5.setLayoutY(490);
+        addToPane(subtitle5);
+        subtitle6 = new Label();
+        subtitle6.setFont(new Font("Cooper Black", 30));
+        subtitle6.setText("Ghost Predators: They chase and eat YOU!\nOnce they catch you, they take 10 boids from you\nand turn into normal predators.");
+        subtitle6.setLayoutX(185);
+        subtitle6.setLayoutY(580);
+        addToPane(subtitle6);
+        subtitle7 = new Label();
+        subtitle7.setFont(new Font("Cooper Black", 30));
+        subtitle7.setText("Ghosts: This is you! You are created by\na flame and will return to it at the\nmoment of your death. Control the\nghost using your Player Key.\n(Check Player Settings for more information)");
+        subtitle7.setLayoutX(225);
+        subtitle7.setLayoutY(730);
+        addToPane(subtitle7);
+
+        picture1 = new Rectangle(90, 80);
+        picture1.setFill(AssetManager.normalBirds(1, 0));
+        picture1.setX(50);
+        picture1.setY(330);
+        addToPane(picture1);
+        picture2 = new Rectangle(80, 80);
+        picture2.setFill(AssetManager.flippedPredators(2));
+        picture2.setX(850);
+        picture2.setY(450);
+        addToPane(picture2);
+        picture3 = new Rectangle(80, 80);
+        picture3.setFill(AssetManager.normalScaryPredators(2));
+        picture3.setX(50);
+        picture3.setY(570);
+        addToPane(picture3);
+        picture4 = new Rectangle(120, 120);
+        picture4.setFill(AssetManager.playerGoingUp(4, true));
+        picture4.setX(850);
+        picture4.setY(750);
+        addToPane(picture4);
+
+        nextPageHowToPlay.setVisible(true);
+    }
+
+    @FXML
+    public void displayHowToPlayPage2() {
+        displaySettings();
+        boidsSettings.setVisible(false);
+        predatorSettings.setVisible(false);
+        playerSettings.setVisible(false);
+        arenaSettings.setVisible(false);
+        startGameButton.setVisible(false);
+
+        title.setFont(new Font("Matura MT Script Capitals", 80));
+        title.setText("how to play: page 2");
+        title.setLayoutY(0);
+        title.setLayoutX(170);
+
+        subtitle1 = new Label();
+        subtitle1.setFont(new Font("Cooper Black", 30));
+        subtitle1.setText("Masts: Press the Player Key to attach\nyourself to one of them and release it to let go.\nThe closest mast will turn purple.");
+        subtitle1.setLayoutX(185);
+        subtitle1.setLayoutY(250);
+        addToPane(subtitle1);
+        subtitle2 = new Label();
+        subtitle2.setFont(new Font("Cooper Black", 30));
+        subtitle2.setText("Springs: You will bounce on them if\nyou collide with them.");
+        subtitle2.setLayoutX(225);
+        subtitle2.setLayoutY(450);
+        addToPane(subtitle2);
+        subtitle3 = new Label();
+        subtitle3.setFont(new Font("Cooper Black", 30));
+        subtitle3.setText("Spikes: Hitting them will kill you and you\nwill lose 5 boids.\nOuch!");
+        subtitle3.setLayoutX(185);
+        subtitle3.setLayoutY(620);
+        addToPane(subtitle3);
+        subtitle4 = new Label();
+        subtitle4.setFont(new Font("Cooper Black", 30));
+        subtitle4.setText("You're ready to go! Check the various Settings menus\nto find out more information.");
+        subtitle4.setLayoutX(95);
+        subtitle4.setLayoutY(820);
+        addToPane(subtitle4);
+
+        picture1 = new Rectangle(70, 70);
+        picture1.setFill(AssetManager.mastSkin(false));
+        picture1.setX(30);
+        picture1.setY(230);
+        addToPane(picture1);
+        picture2 = new Rectangle(70, 70);
+        picture2.setFill(AssetManager.mastSkin(true));
+        picture2.setX(80);
+        picture2.setY(300);
+        addToPane(picture2);
+        picture3 = new Rectangle(150, 30);
+        picture3.setFill(AssetManager.springSkin(true));
+        picture3.setX(810);
+        picture3.setY(470);
+        addToPane(picture3);
+        picture4 = new Rectangle(100, 100);
+        picture4.setFill(AssetManager.spikeSkin(3));
+        picture4.setX(80);
+        picture4.setY(610);
+        addToPane(picture4);
     }
 
     @FXML
@@ -171,17 +335,27 @@ public class ArenaWindowController implements Initializable {
         //display correct buttons
         backButton.setVisible(false);
         howToPlayButton.setVisible(false);
+        nextPageHowToPlay.setVisible(false);
         gameSettingsButton.setVisible(false);
         backToMenuButton.setVisible(true);
         boidsSettings.setVisible(true);
+        boidsSettings.setText("\n\n\n\n\nBoids Settings");
+        boidsSettings.setBackground(AssetManager.getButtonBoid(0, 250, 250));
         predatorSettings.setVisible(true);
+        predatorSettings.setText("\n\n\n\n\nPredator Settings");
+        predatorSettings.setBackground(AssetManager.getButtonPredator(0, 250, 250));
         playerSettings.setVisible(true);
+        playerSettings.setText("\n\n\n\n\nPlayer Settings");
+        playerSettings.setBackground(AssetManager.getButtonPlayer(0, 250, 250));
         arenaSettings.setVisible(true);
+        arenaSettings.setText("\n\n\n\n\nArena Settings");
+        arenaSettings.setBackground(AssetManager.getButtonArena(0, 250, 250));
         startGameButton.setVisible(true);
         backToSettingsButton.setVisible(false);
         applyChangesPredator.setVisible(false);
         applyChangesArena.setVisible(false);
         applyChangesBoid.setVisible(false);
+        applyChangesPlayer.setVisible(false);
 
         //hide text fields
         maxForceNormalPredator.setVisible(false);
@@ -208,10 +382,22 @@ public class ArenaWindowController implements Initializable {
         maxSpeedBoid.setVisible(false);
         maxForceBoid.setVisible(false);
         numberOfBoids.setVisible(false);
+        frictionTF.setVisible(false);
+        gravityTF.setVisible(false);
         information.setVisible(false);
+        moreInformation.setVisible(false);
+        moreExtraInformation.setVisible(false);
+        player1Key.setVisible(false);
+        player2Key.setVisible(false);
+        player3Key.setVisible(false);
+        player4Key.setVisible(false);
 
         //set checkbox to invisible
         differentMassesCheck.setVisible(false);
+        P1Plays.setVisible(false);
+        P2Plays.setVisible(false);
+        P3Plays.setVisible(false);
+        P4Plays.setVisible(false);
 
         //set correct title
         title.setFont(new Font("Matura MT Script Capitals", 100));
@@ -242,8 +428,9 @@ public class ArenaWindowController implements Initializable {
         removeFromPane(subtitle14);
         removeFromPane(subtitle15);
         removeFromPane(subtitle16);
-        removeFromPane(subtitle17);
-        removeFromPane(subtitle18);
+
+        winnerPageNeedsUpdate = false;
+        isOnResultPage = false;
 
         //remove info rectangle
         infoRectangle.setVisible(false);
@@ -258,6 +445,8 @@ public class ArenaWindowController implements Initializable {
 
     @FXML
     public void backToMainMenu() {
+
+        displaySettings();
         settingUpSettingsMenu();
         backToSettingsButton.setVisible(false);
         gameSettingsButton.setVisible(true);
@@ -462,7 +651,7 @@ public class ArenaWindowController implements Initializable {
         differentMassesCheck.setVisible(true);
         differentMassesCheck.setLayoutX(695);
         differentMassesCheck.setLayoutY(625);
-        differentMassesCheck.setSelected(ArenaSetup.isIsDifferentMass());
+        differentMassesCheck.setSelected(ArenaSetup.isDifferentMass());
 
         //sets up the Apply Changes button
         applyChangesBoid.setVisible(true);
@@ -492,15 +681,13 @@ public class ArenaWindowController implements Initializable {
 
             //checks for errors, throw exception and save settings
             //  //check Radius
-            if ((sepRadius < 0) || (cohRadius < 0) || (alignRadius < 0) || (predRadius < 0) || (playerRadius < 0)) {
+            if ((sepRadius < 0) || (sepRadius > 1000) || (cohRadius < 0) || (cohRadius > 1000) || (alignRadius < 0) || (alignRadius > 1000) || (predRadius < 0) || (predRadius > 1000) || (playerRadius < 0) || (playerRadius > 1000)) {
                 throw new Exception();
-            } 
-            //  //check Force
-            else if ((sepForce < 0) || (cohForce < 0) || (alignForce < 0) || (predForce < 0) || (playerForce < 0)) {
+            } //  //check Force
+            else if ((sepForce < 0) || (sepForce > 1000) || (cohForce < 0) || (cohForce > 1000) || (alignForce < 0) || (alignForce > 1000) || (predForce < 0) || (predForce > 1000) || (playerForce < 0) || (playerForce > 1000)) {
                 throw new Exception();
-            } 
-            //  //check extra
-            else if ((maxSPEED < 0) || (maxFORCE < 0) || (nbOfBoids < 1)) {
+            } //  //check extra
+            else if ((maxSPEED < 0) || (maxSPEED > 1000) || (maxFORCE < 0) || (maxFORCE > 1000) || (nbOfBoids < 1) || (nbOfBoids > 1000)) {
                 throw new Exception();
             } else {
                 //sets radius based on inputs
@@ -519,7 +706,7 @@ public class ArenaWindowController implements Initializable {
                 ArenaSetup.setMaxSpeedBoid(maxSPEED);
                 ArenaSetup.setMaxForceBoid(maxFORCE);
                 ArenaSetup.setNbOfBoids(nbOfBoids);
-                ArenaSetup.setIsDifferentMass(differentMassesBoid);
+                ArenaSetup.setDifferentMass(differentMassesBoid);
             }
             areInputsAllRight(true);
         } catch (Exception e) {
@@ -570,7 +757,7 @@ public class ArenaWindowController implements Initializable {
         subtitle3.setFont(new Font("Cooper Black", 27));
         subtitle3.setText("Max Force");
         subtitle3.setLayoutX(160);
-        subtitle3.setLayoutY(610);//////
+        subtitle3.setLayoutY(610);
         addToPane(subtitle3);
         subtitle4 = new Label();
         subtitle4.setFont(new Font("Cooper Black", 27));
@@ -632,7 +819,7 @@ public class ArenaWindowController implements Initializable {
             double maxSpeedSP = Double.parseDouble(maxSpeedScaryPredator.getText());
 
             //checking validity of the inputs and throwing exception if needed
-            if ((maxSpeedNP < 0) || (numberNP < 0) || (maxForceNP < 0) || (maxSpeedSP < 0) || (maxForceSP < 0)) {
+            if ((maxSpeedNP <= 0) || (maxSpeedNP > 1000) || (numberNP < 0) || (numberNP > 1000) || (maxForceNP < 0) || (maxForceNP > 1000) || (maxSpeedSP <= 0) || (maxSpeedSP > 1000) || (maxForceSP < 0) || (maxForceSP > 1000)) {
                 throw new Exception();
             } else {
                 //saving normal predator settings
@@ -664,7 +851,7 @@ public class ArenaWindowController implements Initializable {
         title.setTextFill(Paint.valueOf("black"));
         title.setLayoutX(230);
         title.setLayoutY(0);
-        
+
         //displays player 1 picture
         picture1 = new Rectangle(103, 90);
         picture1.setFill(AssetManager.playerGoingUp(1, true));
@@ -689,7 +876,7 @@ public class ArenaWindowController implements Initializable {
         picture4.setX(779.4);
         picture4.setY(250);
         addToPane(picture4);
-        
+
         //sets up all the labels used in the player page
         subtitle1 = new Label();
         subtitle1.setFont(new Font("Cooper Black", 36));
@@ -715,8 +902,147 @@ public class ArenaWindowController implements Initializable {
         subtitle4.setLayoutX(761.8);
         subtitle4.setLayoutY(190);
         addToPane(subtitle4);
-        
-        
+        subtitle5 = new Label();
+        subtitle5.setFont(new Font("Cooper Black", 27));
+        subtitle5.setText("Playing?");
+        subtitle5.setLayoutX(115);
+        subtitle5.setLayoutY(355);
+        addToPane(subtitle5);
+        subtitle6 = new Label();
+        subtitle6.setFont(new Font("Cooper Black", 27));
+        subtitle6.setText("Playing?");
+        subtitle6.setLayoutX(335.6);
+        subtitle6.setLayoutY(355);
+        addToPane(subtitle6);
+        subtitle7 = new Label();
+        subtitle7.setFont(new Font("Cooper Black", 27));
+        subtitle7.setText("Playing?");
+        subtitle7.setLayoutX(556.2);
+        subtitle7.setLayoutY(355);
+        addToPane(subtitle7);
+        subtitle8 = new Label();
+        subtitle8.setFont(new Font("Cooper Black", 27));
+        subtitle8.setText("Playing?");
+        subtitle8.setLayoutX(776.8);
+        subtitle8.setLayoutY(355);
+        addToPane(subtitle8);
+        subtitle9 = new Label();
+        subtitle9.setFont(new Font("Cooper Black", 27));
+        subtitle9.setText("Player Key");
+        subtitle9.setLayoutX(100);
+        subtitle9.setLayoutY(450);
+        addToPane(subtitle9);
+        subtitle10 = new Label();
+        subtitle10.setFont(new Font("Cooper Black", 27));
+        subtitle10.setText("Player Key");
+        subtitle10.setLayoutX(320.6);
+        subtitle10.setLayoutY(450);
+        addToPane(subtitle10);
+        subtitle11 = new Label();
+        subtitle11.setFont(new Font("Cooper Black", 27));
+        subtitle11.setText("Player Key");
+        subtitle11.setLayoutX(541.2);
+        subtitle11.setLayoutY(450);
+        addToPane(subtitle11);
+        subtitle12 = new Label();
+        subtitle12.setFont(new Font("Cooper Black", 27));
+        subtitle12.setText("Player Key");
+        subtitle12.setLayoutX(761.8);
+        subtitle12.setLayoutY(450);
+        addToPane(subtitle12);
+        subtitle13 = new Label();
+        subtitle13.setFont(new Font("Cooper Black", 36));
+        subtitle13.setText("Friction");
+        subtitle13.setLayoutX(200);
+        subtitle13.setLayoutY(580);
+        addToPane(subtitle13);
+        subtitle14 = new Label();
+        subtitle14.setFont(new Font("Cooper Black", 36));
+        subtitle14.setText("Gravity");
+        subtitle14.setLayoutX(640);
+        subtitle14.setLayoutY(580);
+        addToPane(subtitle14);
+
+        //set up labels for the players' keys
+        player1Key.setVisible(true);
+        player2Key.setVisible(true);
+        player3Key.setVisible(true);
+        player4Key.setVisible(true);
+
+        //set up checkboxes
+        P1Plays.setVisible(true);
+        P1Plays.setLayoutX(157);
+        P1Plays.setLayoutY(390);
+        P1Plays.setSelected(ArenaSetup.isPlayer1Playing());
+        P2Plays.setVisible(true);
+        P2Plays.setLayoutX(377.6);
+        P2Plays.setLayoutY(390);
+        P3Plays.setVisible(true);
+        P3Plays.setLayoutX(598.2);
+        P3Plays.setLayoutY(390);
+        P4Plays.setVisible(true);
+        P4Plays.setLayoutX(818.8);
+        P4Plays.setLayoutY(390);
+
+        //set up textfields
+        frictionTF.setVisible(true);
+        frictionTF.setLayoutX(220);
+        frictionTF.setLayoutY(620);
+        frictionTF.setText("" + ArenaSetup.getFriction());
+
+        gravityTF.setVisible(true);
+        gravityTF.setLayoutX(660);
+        gravityTF.setLayoutY(620);
+        gravityTF.setText("" + ArenaSetup.getGravity());
+
+        //revealing the change settings button
+        applyChangesPlayer.setVisible(true);
+    }
+
+    //apply changes to Player based on inputs
+    @FXML
+    public void applyChangesToPlayer() {
+        try {
+            ArrayList<Boolean> nbOfPlayers = new ArrayList<>();
+
+            boolean p1IsPlaying = P1Plays.isSelected();
+            if (p1IsPlaying) {
+                nbOfPlayers.add(p1IsPlaying);
+            }
+            boolean p2IsPlaying = P2Plays.isSelected();
+            if (p2IsPlaying) {
+                nbOfPlayers.add(p2IsPlaying);
+            }
+            boolean p3IsPlaying = P3Plays.isSelected();
+            if (p3IsPlaying) {
+                nbOfPlayers.add(p3IsPlaying);
+            }
+            boolean p4IsPlaying = P4Plays.isSelected();
+            if (p4IsPlaying) {
+                nbOfPlayers.add(p4IsPlaying);
+            }
+
+            double friction = Double.parseDouble(frictionTF.getText());
+            double gravity = Double.parseDouble(gravityTF.getText());
+
+            if ((friction < 0) || (friction > 10) || (gravity <= 0) || (gravity > 100)) {
+                throw new Exception();
+            } else if (nbOfPlayers.size() < 1) {
+                throw new Exception();
+            } else {
+                ArenaSetup.setPlayer1Playing(p1IsPlaying);
+                ArenaSetup.setPlayer2Playing(p2IsPlaying);
+                ArenaSetup.setPlayer3Playing(p3IsPlaying);
+                ArenaSetup.setPlayer4Playing(p4IsPlaying);
+                ArenaSetup.setFriction(friction);
+                ArenaSetup.setGravity(gravity);
+            }
+            areInputsAllRight(true);
+
+        } catch (Exception e) {
+            areInputsAllRight(false);
+        }
+
     }
 
     //display the Arena Settings page
@@ -778,6 +1104,12 @@ public class ArenaWindowController implements Initializable {
         subtitle8.setLayoutX(680);
         subtitle8.setLayoutY(540);
         addToPane(subtitle8);
+        subtitle9 = new Label();
+        subtitle9.setFont(new Font("Cooper Black", 27));
+        subtitle9.setText("s");
+        subtitle9.setLayoutX(220);
+        subtitle9.setLayoutY(230);
+        addToPane(subtitle9);
 
         picture1 = new Rectangle();
         picture1.setWidth(70);
@@ -842,7 +1174,7 @@ public class ArenaWindowController implements Initializable {
             int numberSpring = Integer.parseInt(numberOfSprings.getText());
 
             //checking validity of the inputs and throwing exception if needed
-            if ((timeTF < 5) || (separationRM <= 0) || (numberM <= 0) || (separationRS <= 0) || (springinessSTF <= 0) || (numberSpring <= 0)) {
+            if ((timeTF < 5) || (timeTF > 900) || (separationRM <= 0) || (separationRM > 1000) || (numberM <= 0) || (numberM > 1000) || (separationRS < 70) || (separationRS > 1000) || (springinessSTF < 1) || (springinessSTF > 10) || (numberSpring <= 0) || (numberSpring > 1000)) {
                 throw new Exception();
             } else {
                 //saving time settings
@@ -878,36 +1210,120 @@ public class ArenaWindowController implements Initializable {
         //makes it so that the player cannot go to the parent window while the game is active
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(title.getScene().getWindow());
-
         stage.show();
+        winnerPageNeedsUpdate = true;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //setting background
-        AssetManager.getAllGameAssets();
-        panel.setBackground(AssetManager.getMenuBackgroundImage(screenWidth + 10, screenHeight + 40));
+    //shows the final scores and animates the winner
+    public void showWinners() {
         settingUpButtons();
+        backToSettingsButton.setVisible(true);
 
+        //set up title
+        title.toFront();
+        title.setFont(new Font("Matura MT Script Capitals", 80));
+        title.setText("Results!");
+        title.setTextFill(Paint.valueOf("black"));
+        title.setLayoutX(350);
+        title.setLayoutY(0);
+
+        //displays player 1 picture
+        picture1 = new Rectangle(200, 200);
+        if (ArenaSetup.p1.isReal) {
+            picture1.setFill(AssetManager.playerGoingUp(1, true));
+        } else {
+            picture1.setFill(AssetManager.playerOrbSprites(1, 1));
+        }
+        picture1.setX(200);
+        picture1.setY(200);
+        addToPane(picture1);
+
+        //displays player 2 picture
+        picture2 = new Rectangle(200, 200);
+        if (ArenaSetup.p2.isReal) {
+            picture2.setFill(AssetManager.playerGoingUp(2, true));
+        } else {
+            picture2.setFill(AssetManager.playerOrbSprites(2, 1));
+        }
+        picture2.setX(600);
+        picture2.setY(200);
+        addToPane(picture2);
+
+        //displays player 3 picture
+        picture3 = new Rectangle(200, 200);
+        if (ArenaSetup.p3.isReal) {
+            picture3.setFill(AssetManager.playerGoingUp(3, true));
+        } else {
+            picture3.setFill(AssetManager.playerOrbSprites(3, 1));
+        }
+        picture3.setX(200);
+        picture3.setY(600);
+        addToPane(picture3);
+
+        //displays player 4 picture
+        picture4 = new Rectangle(200, 200);
+        if (ArenaSetup.p4.isReal) {
+            picture4.setFill(AssetManager.playerGoingUp(4, true));
+        } else {
+            picture4.setFill(AssetManager.playerOrbSprites(4, 1));
+        }
+        picture4.setX(600);
+        picture4.setY(600);
+        addToPane(picture4);
+
+        subtitle1 = new Label();
+        subtitle1.setFont(new Font("Cooper Black", 36));
+        subtitle1.setTextFill(Paint.valueOf("purple"));
+        subtitle1.setText("" + ArenaSetup.p1.getScore());
+        subtitle1.setLayoutX(270);
+        subtitle1.setLayoutY(430);
+        addToPane(subtitle1);
+        subtitle2 = new Label();
+        subtitle2.setFont(new Font("Cooper Black", 36));
+        subtitle2.setTextFill(Paint.valueOf("blue"));
+        subtitle2.setText("" + ArenaSetup.p2.getScore());
+        subtitle2.setLayoutX(670);
+        subtitle2.setLayoutY(430);
+        addToPane(subtitle2);
+        subtitle3 = new Label();
+        subtitle3.setFont(new Font("Cooper Black", 36));
+        subtitle3.setTextFill(Paint.valueOf("yellow"));
+        subtitle3.setText("" + ArenaSetup.p3.getScore());
+        subtitle3.setLayoutX(270);
+        subtitle3.setLayoutY(820);
+        addToPane(subtitle3);
+        subtitle4 = new Label();
+        subtitle4.setFont(new Font("Cooper Black", 36));
+        subtitle4.setTextFill(Paint.valueOf("red"));
+        subtitle4.setText("" + ArenaSetup.p4.getScore());
+        subtitle4.setLayoutX(670);
+        subtitle4.setLayoutY(820);
+        addToPane(subtitle4);
+
+        isOnResultPage = true;
+        winnerPageNeedsUpdate = false;
     }
 
-//creates all the buttons + location. disabled most of them for later use
+    //creates all the buttons + location. disabled most of them for later use
     public void settingUpButtons() {
         //setting up Back to Main Project button
         backButton.setLayoutX(5);
         backButton.setLayoutY(5);
+        backButton.setBackground(AssetManager.getButtonDefault(100, 100));
 
         //setting up Game Settings button
         gameSettingsButton.setPrefSize(400, 200);
         gameSettingsButton.setLayoutX(300);
         gameSettingsButton.setLayoutY(200);
-        //gameSettingsButton.setVisible(false);
+        gameSettingsButton.setBackground(AssetManager.getButtonDefault(450, 290));
 
         //setting up How to Play button
         howToPlayButton.setPrefSize(400, 200);
         howToPlayButton.setLayoutX(300);
         howToPlayButton.setLayoutY(600);
-        //howToPlayButton.setVisible(false);
+        howToPlayButton.setBackground(AssetManager.getButtonDefault(450, 290));
+
+        nextPageHowToPlay.setVisible(false);
 
         title.setFont(new Font("Matura MT Script Capitals", 80));
         title.setText("Boids Game");
@@ -917,6 +1333,7 @@ public class ArenaWindowController implements Initializable {
         backToMenuButton.setLayoutX(5);
         backToMenuButton.setLayoutY(5);
         backToMenuButton.setVisible(false);
+        backToMenuButton.setBackground(AssetManager.getButtonDefault(150, 100));
 
         boidsSettings.setPrefSize(250, 250);
         boidsSettings.setLayoutX(167);
@@ -942,22 +1359,28 @@ public class ArenaWindowController implements Initializable {
         startGameButton.setLayoutX(250);
         startGameButton.setLayoutY(850);
         startGameButton.setVisible(false);
+        startGameButton.setBackground(AssetManager.getButtonDefault(500, 150));
 
         backToSettingsButton.setLayoutX(5);
         backToSettingsButton.setLayoutY(5);
         backToSettingsButton.setVisible(false);
+        backToSettingsButton.setBackground(AssetManager.getButtonDefault(200, 100));
 
         applyChangesPredator.setLayoutX(370);
-        applyChangesPredator.setLayoutY(700);
+        applyChangesPredator.setLayoutY(750);
         applyChangesPredator.setVisible(false);
 
         applyChangesArena.setLayoutX(370);
-        applyChangesArena.setLayoutY(700);
+        applyChangesArena.setLayoutY(750);
         applyChangesArena.setVisible(false);
 
         applyChangesBoid.setLayoutX(370);
         applyChangesBoid.setLayoutY(750);
         applyChangesBoid.setVisible(false);
+
+        applyChangesPlayer.setLayoutX(370);
+        applyChangesPlayer.setLayoutY(750);
+        applyChangesPlayer.setVisible(false);
 
         maxForceNormalPredator.setVisible(false);
         maxForceScaryPredator.setVisible(false);
@@ -986,13 +1409,55 @@ public class ArenaWindowController implements Initializable {
         maxForceBoid.setVisible(false);
         numberOfBoids.setVisible(false);
 
+        frictionTF.setVisible(false);
+        gravityTF.setVisible(false);
+
         //hide checkbox
         differentMassesCheck.setVisible(false);
+        P1Plays.setVisible(false);
+        P2Plays.setVisible(false);
+        P3Plays.setVisible(false);
+        P4Plays.setVisible(false);
 
         information = new Label();
         information.setFont(new Font("Cooper Black", 27));
         information.setVisible(false);
         addToPane(information);
+
+        moreInformation.setFont(new Font("Cooper Black", 27));
+        moreInformation.setText("");
+        moreInformation.setVisible(false);
+        moreExtraInformation.setFont(new Font("Cooper Black", 27));
+        moreExtraInformation.setText("");
+        moreExtraInformation.setVisible(false);
+
+        player1Key.setFont(new Font("Cooper Black", 27));
+        player1Key.setTextFill(Paint.valueOf("purple"));
+        player1Key.setLayoutX(157);
+        player1Key.setLayoutY(480);
+        player1Key.setText("Q");
+        player1Key.setVisible(false);
+
+        player2Key.setFont(new Font("Cooper Black", 27));
+        player2Key.setTextFill(Paint.valueOf("blue"));
+        player2Key.setLayoutX(377.6);
+        player2Key.setLayoutY(480);
+        player2Key.setText("R");
+        player2Key.setVisible(false);
+
+        player3Key.setFont(new Font("Cooper Black", 27));
+        player3Key.setTextFill(Paint.valueOf("green"));
+        player3Key.setLayoutX(598.2);
+        player3Key.setLayoutY(480);
+        player3Key.setText("U");
+        player3Key.setVisible(false);
+
+        player4Key.setFont(new Font("Cooper Black", 27));
+        player4Key.setTextFill(Paint.valueOf("red"));
+        player4Key.setLayoutX(818.8);
+        player4Key.setLayoutY(480);
+        player4Key.setText("P");
+        player4Key.setVisible(false);
 
         infoRectangle.setHeight(300);
         infoRectangle.setWidth(1110);
@@ -1012,8 +1477,397 @@ public class ArenaWindowController implements Initializable {
         predatorSettings.setVisible(false);
         backToMenuButton.setVisible(false);
         backToSettingsButton.setVisible(true);
+
+        winnerPageNeedsUpdate = false;
+
     }
 
+    //**// BUTTON ANIMATIONS //**// 
+    //animation start
+    @FXML
+    public void onHoverBoidSettings() {
+        onBoidsSetting = true;
+    }
+
+    @FXML
+    public void onHoverPredatorSettings() {
+        onPredatorSettings = true;
+    }
+
+    @FXML
+    public void onHoverPlayerSettings() {
+        onPlayerSettings = true;
+    }
+
+    @FXML
+    public void onHoverArenaSettings() {
+        onArenaSettings = true;
+    }
+
+    //animation end
+    @FXML
+    public void onHoverExitBoidSettings() {
+        onBoidsSetting = false;
+    }
+
+    @FXML
+    public void onHoverExitPredatorSettings() {
+        onPredatorSettings = false;
+    }
+
+    @FXML
+    public void onHoverExitPlayerSettings() {
+        onPlayerSettings = false;
+    }
+
+    @FXML
+    public void onHoverExitArenaSettings() {
+        onArenaSettings = false;
+    }
+
+    //**// EXTRA INFO //**// 
+    //hides the extra information
+    @FXML
+    public void hideInformation() {
+        infoRectangle.setVisible(false);
+        information.setVisible(false);
+        moreInformation.setVisible(false);
+        moreExtraInformation.setVisible(false);
+    }
+
+    //  //PREDATORS
+    @FXML
+    public void maxSpeedPredatorInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The maximum speed that the predator can reach.");
+    }
+
+    @FXML
+    public void maxSpeedScaryPredatorInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The maximum speed that the ghost predator can reach.");
+    }
+
+    @FXML
+    public void numberOfPredatosInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The initial number of existing predators.");
+    }
+
+    @FXML
+    public void maxForcePredatorInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The predator's maximum steering force.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(How fast it will change direction)");
+    }
+
+    @FXML
+    public void maxForceScaryPredatorInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The ghost predator's maximum steering force.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(How fast it will change direction)");
+    }
+
+    //  //BOIDS
+    @FXML
+    public void separationRadiusInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The distance between the boids in a flock.");
+    }
+
+    @FXML
+    public void cohesionRadiusInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Boids will move toward the average position");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("of local flockmates.");
+
+    }
+
+    @FXML
+    public void alignmentRadiusInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Boids will steer towards the average heading");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("of local flockmates.");
+    }
+
+    @FXML
+    public void predatorRadiusInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Boids will run from predators as soon as they");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("get into range.");
+    }
+
+    @FXML
+    public void playerRadiusInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Boids will run from players as soon as they");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("get into range.");
+    }
+
+    @FXML
+    public void separationForceInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How strongly the boids will respect");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("the separation radius.");
+    }
+
+    @FXML
+    public void cohesionForceInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How strongly the boids will respect");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("the cohesion radius.");
+    }
+
+    @FXML
+    public void alignmentForceInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How strongly the boids will respect");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("the alignment radius.");
+    }
+
+    @FXML
+    public void predatorForceInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How quickly the boid will react to the presence");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("of a predator in range.");
+    }
+
+    @FXML
+    public void playerForceInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How quickly the boid will react to the presence");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("of a player in range.");
+    }
+
+    @FXML
+    public void maxSpeedBoidInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The maximum speed the boid can reach.");
+    }
+
+    @FXML
+    public void maxForceBoidInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The boid's maximum steering force.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(How fast it will change direction)");
+    }
+
+    @FXML
+    public void numberOfBoidInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The initial number of existing boids.");
+    }
+
+    @FXML
+    public void differentMassInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Check if the boids are to have different masses.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Mass will impact all the forces)");
+    }
+
+    //  //PLAYER
+    @FXML
+    public void playerSwingInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Use this button to move your character!");
+    }
+
+    @FXML
+    public void player1PlayInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Check if Player 1 will play.");
+    }
+
+    @FXML
+    public void player2PlayInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Check if Player 2 will play.");
+    }
+
+    @FXML
+    public void player3PlayInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Check if Player 3 will play.");
+    }
+
+    @FXML
+    public void player4PlayInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Check if Player 4 will play.");
+    }
+
+    @FXML
+    public void frictionInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The ammount of friction present.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Only values from 0(no friction) to 10(lot of friction))");
+    }
+
+    @FXML
+    public void gravityInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The gravity of that world.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Values between 0 and 100)");
+    }
+
+    //  //ARENA
+    @FXML
+    public void timeInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How long the game will last.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Minimum 5 seconds, maximum 15 minutes)");
+    }
+
+    @FXML
+    public void mastSeparationInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Minimum distance between masts.");
+    }
+
+    @FXML
+    public void numberOfMastsInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The maximum amount of mast created.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Actual number of masts depends on separation and luck)");
+    }
+
+    @FXML
+    public void springSeparationInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("Minimum distance between springs.");
+    }
+
+    @FXML
+    public void numberOfSpringsInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("The maximum amount of mast created.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Actual number depends on separation and luck)");
+    }
+
+    @FXML
+    public void springinessInfo() {
+        infoRectangle.setVisible(true);
+        information.setVisible(false);
+
+        moreInformation.setVisible(true);
+        moreInformation.setText("How bouncy the springs are.");
+        moreExtraInformation.setVisible(true);
+        moreExtraInformation.setText("(Springiness must between 1 and 10)");
+
+    }
+
+    //checks if the inputs are good
     public void areInputsAllRight(boolean theyAreFine) {
         if (theyAreFine) {
             infoRectangle.setVisible(true);
@@ -1040,4 +1894,74 @@ public class ArenaWindowController implements Initializable {
         panel.getChildren().remove(node);
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        //setting background
+        AssetManager.getAllGameAssets();
+        panel.setBackground(AssetManager.getMenuBackgroundImage(screenWidth + 10, screenHeight + 40));
+        settingUpButtons();
+
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                counter++;
+                if (onBoidsSetting && (counter % 10.0 == 0)) {
+                    if (animationBoid == 3) {
+                        animationBoid = 0;
+                    } else {
+                        animationBoid++;
+                    }
+                    boidsSettings.setBackground(AssetManager.getButtonBoid(animationBoid, 250, 250));
+                }
+                if (onPredatorSettings && (counter % 10 == 0)) {
+                    if (animationPredator == 5) {
+                        animationPredator = 0;
+                    } else {
+                        animationPredator++;
+                    }
+                    predatorSettings.setBackground(AssetManager.getButtonPredator(animationPredator, 250, 250));
+                }
+                if (onPlayerSettings && (counter % 10.0 == 0)) {
+                    if (animationPlayer == 7) {
+                        animationPlayer = 0;
+                    } else {
+                        animationPlayer++;
+                    }
+                    playerSettings.setBackground(AssetManager.getButtonPlayer(animationPlayer, 250, 250));
+                }
+                if (onArenaSettings && (counter % 20.0 == 0)) {
+                    if (animationArena == 1) {
+                        animationArena = 0;
+                    } else {
+                        animationArena++;
+                    }
+                    arenaSettings.setBackground(AssetManager.getButtonArena(animationArena, 250, 250));
+                }
+                if (ArenaSetup.isGameOver && winnerPageNeedsUpdate) {
+                    showWinners();
+                }
+
+                if ((isOnResultPage) && (counter % 10 == 0)) {
+                    for (Integer numbers : ArenaSetup.winnerPlayer) {
+                        switch (numbers) {
+                            case 1:
+                                picture1.setFill(AssetManager.playerGoingUp(1, animationWinner));
+                                break;
+                            case 2:
+                                picture2.setFill(AssetManager.playerGoingUp(2, animationWinner));
+                                break;
+                            case 3:
+                                picture3.setFill(AssetManager.playerGoingUp(3, animationWinner));
+                                break;
+                            case 4:
+                                picture4.setFill(AssetManager.playerGoingUp(4, animationWinner));
+                                break;
+                        }
+                    }
+                    animationWinner = !animationWinner;
+                }
+
+            }
+        }.start();
+    }
 }

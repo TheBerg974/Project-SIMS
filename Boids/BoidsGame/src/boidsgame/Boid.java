@@ -18,6 +18,7 @@ public class Boid {
     //mass of the boid
     int mass; // mass makes it so that boids adhere slower or faster to a group /////////////////////////////////////////////////////////////////////////////
 
+    
     // radius inputs 
     double separationRadius = ArenaSetup.getSeparationRadius();
     double cohesionRadius = ArenaSetup.getCohesionRadius();
@@ -47,7 +48,7 @@ public class Boid {
         //randomly selects the boid type
         boidType = random.nextInt((2) + 1);
         //selects the mass according to player input
-        if (ArenaSetup.isDifferentMass) {
+        if (ArenaSetup.isDifferentMass()) {
             mass = boidType + 1;
         } else {
             mass = 1;
@@ -59,9 +60,8 @@ public class Boid {
     }
 
     //changes the acceleration based on the force and the mass of the boid
-    public void applyForce(Vector2D force) 
-    {
-        force.div(mass); 
+    public void applyForce(Vector2D force) {
+        force.div(mass);
         acceleration = acceleration.add(force);
     }
 
@@ -84,8 +84,9 @@ public class Boid {
         applyForce(sep);
         applyForce(align);
         applyForce(coh);
+        applyForce(play);
         applyForce(pre);
-        applyForce(play); 
+
     }
 
     //Aligment of the boids in the flock
