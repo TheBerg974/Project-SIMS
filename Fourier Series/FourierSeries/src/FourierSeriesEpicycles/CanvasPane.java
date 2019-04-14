@@ -31,6 +31,7 @@ public class CanvasPane extends Pane {
     private ArrayList<Point> points;
     private ArrayList<Point> path;
     private ArrayList<Epicycle> epicycles;
+    private ArrayList<Epicycle> ogEpicycles;
     private boolean clicked = false;
     private boolean paused = true;
     private Button back;
@@ -46,6 +47,7 @@ public class CanvasPane extends Pane {
                 paused = true;
                 DiscreteFourierTransform dft = new DiscreteFourierTransform(points);
                 epicycles = dft.discreteFourierTransform();
+                ogEpicycles = epicycles;
                 points.removeAll(points);
                 path.removeAll(path);
                 epicycles.get(0).setCircle(475, 400);
@@ -71,6 +73,7 @@ public class CanvasPane extends Pane {
             double initialTime = System.nanoTime();
             double currentTime;
             double deltaTime;
+            double interval = Math.PI * 2 / epicycles.size();
             while (paused) {
                 currentTime = System.nanoTime();
                 deltaTime = (currentTime - initialTime) / 1000000;
@@ -78,7 +81,7 @@ public class CanvasPane extends Pane {
                 if (deltaTime > 33.2) {
                     initialTime = currentTime;
                     clear(gc);
-                    drawEpicycles(Math.PI * 2 / epicycles.size());
+                    drawEpicycles(interval);
                     drawPoints();
                 }
             }

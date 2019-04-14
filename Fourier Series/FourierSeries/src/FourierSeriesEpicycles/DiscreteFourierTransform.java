@@ -38,7 +38,7 @@ public class DiscreteFourierTransform {
                 sum.add(Xn.get(n).mult(c));
             }
             sum.setReal(sum.getReal()/N);
-            sum.setImaginary(-1*sum.getImaginary()/N);
+            sum.setImaginary(-sum.getImaginary()/N);
 
             double frequency = k;
             double radius = sum.getRadius();

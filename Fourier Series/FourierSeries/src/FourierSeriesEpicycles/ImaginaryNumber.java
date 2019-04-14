@@ -51,7 +51,7 @@ public class ImaginaryNumber {
     
     public static ArrayList<ImaginaryNumber> toImaginaryNumbers(ArrayList<Point> points) {
         ArrayList<ImaginaryNumber> imaginaryNums = new ArrayList<>();
-        for(int i = 0; i < points.size(); i+=20) {
+        for(int i = 0; i < points.size(); i+=10) {
             double x = points.get(i).getX();
             double y = points.get(i).getY();
             ImaginaryNumber tempNum = new ImaginaryNumber(x, y);

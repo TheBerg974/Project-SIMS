@@ -20,14 +20,15 @@ public class FourierSeries extends Application {
 
     private static Scene scene;
     private static Stage window;
+    private static Pane pane;
 
     @Override
     public void start(Stage primaryStage) {
         window = primaryStage;
         
-        Pane root = new EpicyclePane();
+        pane = new EpicyclePane();
 
-        scene = new Scene(root, 950, 500);
+        scene = new Scene(pane, 950, 500);
 
         window.setTitle("FOURIER SERIES DEMONSTRATION");
         window.setScene(scene);
@@ -46,13 +47,19 @@ public class FourierSeries extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    
+    /**
+     * 
+     * @param p
+     * @param width
+     * @param height 
+     */
     public static void changePane(Pane p, double width, double height) {
-        scene = new Scene(p, width, height);
+        pane = p;
+        scene = new Scene(pane, width, height);
         window.setScene(scene);
         p.requestFocus();
         window.show();
-        System.out.println("Called");
     }
 
 }

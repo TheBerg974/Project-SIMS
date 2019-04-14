@@ -116,11 +116,8 @@ public class EpicyclePane extends Pane {
             resetEpycicles();
         });
 
-        canvasButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                FourierSeries.changePane(new CanvasPane(), 975, 800);
-            }
+        canvasButton.setOnAction((ActionEvent e) -> {
+            FourierSeries.changePane(new CanvasPane(), 975, 800);
         });
 
         this.getChildren().addAll(canvas, nCircles, nCirclesLabel, freqMult, freqLabel,
