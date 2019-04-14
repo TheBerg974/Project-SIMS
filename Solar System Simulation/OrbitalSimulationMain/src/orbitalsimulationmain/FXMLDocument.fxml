@@ -31,7 +31,10 @@
       <CheckBox fx:id="checkBoxEarth" layoutX="622.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <CheckBox fx:id="checkBoxSun" layoutX="777.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
       <CheckBox fx:id="checkBoxPhiOrionis" layoutX="934.0" layoutY="826.0" mnemonicParsing="false" onAction="#onPresetCheckBoxAction" />
-      <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="690.0" prefWidth="1218.0" />
+      <AnchorPane fx:id="UI" layoutY="-1.0" onMouseClicked="#handleMouseClickAction" prefHeight="690.0" prefWidth="1218.0">
+         <children>
+            <Button fx:id="buttonBackToMenu" layoutX="41.0" layoutY="44.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="70.0" prefWidth="100.0" text="Back" />
+         </children></AnchorPane>
       <Label fx:id="labelVelocityX" layoutX="194.0" layoutY="826.0" prefHeight="17.0" prefWidth="21.0" text="X:" />
       <Label fx:id="labelVelocityY" layoutX="286.0" layoutY="826.0" prefHeight="17.0" prefWidth="20.0" text="Y:" />
       <TextField fx:id="textFieldVelocityY" layoutX="308.0" layoutY="822.0" prefHeight="25.0" prefWidth="58.0" text="0" />
