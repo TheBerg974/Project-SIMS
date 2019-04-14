@@ -15,16 +15,14 @@ public class CelestialBody extends Circle{
     protected Vector2D tangentialVelocity;
     protected double mass;
     protected double radius;
-    protected Vector2D coordinates;       
+    public Vector2D coordinates;
     
     public CelestialBody(Vector2D tangentialVelocity, double mass, double radius, Vector2D coordinates) {
         super(coordinates.getX(), coordinates.getY(), radius);
         this.tangentialVelocity = tangentialVelocity;
         this.mass = mass;
         this.radius = radius;
-
         this.coordinates = coordinates; 
-        
     }
     
     //Getters and Setters

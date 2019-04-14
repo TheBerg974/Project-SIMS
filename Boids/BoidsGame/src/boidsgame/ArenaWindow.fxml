@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="panel" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="boidsgame.ArenaWindowController">
+   <children>
+      <Button fx:id="gameSettingsButton" layoutX="453.0" layoutY="92.0" mnemonicParsing="false" onAction="#displaySettings" text="Play Game">
+         <font>
+            <Font name="Cooper Black" size="45.0" />
+         </font></Button>
+      <Button fx:id="howToPlayButton" layoutX="169.0" layoutY="92.0" mnemonicParsing="false" onAction="#displayHowToPlay" text="How to Play">
+         <font>
+            <Font name="Cooper Black" size="45.0" />
+         </font></Button>
+      <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#backToProject" text="Back">
+         <font>
+            <Font name="Cooper Black" size="17.0" />
+         </font></Button>
+      <Button fx:id="backToMenuButton" layoutX="14.0" layoutY="55.0" mnemonicParsing="false" onAction="#backToMainMenu" text="Back to Menu">
+         <font>
+            <Font name="Cooper Black" size="17.0" />
+         </font></Button>
+      <Button fx:id="boidsSettings" layoutX="40.0" layoutY="484.0" mnemonicParsing="false" onAction="#displayBoidsSettings" onMouseEntered="#onHoverBoidSettings" onMouseExited="#onHoverExitBoidSettings" text=" Boids Settings">
+         <font>
+            <Font name="Cooper Black" size="27.0" />
+         </font></Button>
+      <Button fx:id="predatorSettings" layoutX="322.0" layoutY="484.0" mnemonicParsing="false" onAction="#displayPredatorSettings" onMouseEntered="#onHoverPredatorSettings" onMouseExited="#onHoverExitPredatorSettings" text="Predator Settings">
+         <font>
+            <Font name="Cooper Black" size="24.0" />
+         </font></Button>
+      <Button fx:id="playerSettings" layoutX="39.0" layoutY="585.0" mnemonicParsing="false" onAction="#displayPlayerSettings" onMouseEntered="#onHoverPlayerSettings" onMouseExited="#onHoverExitPlayerSettings" text="Player Settings">
+         <font>
+            <Font name="Cooper Black" size="27.0" />
+         </font></Button>
+      <Button fx:id="arenaSettings" layoutX="338.0" layoutY="585.0" mnemonicParsing="false" onAction="#displayArenaSettings" onMouseEntered="#onHoverArenaSettings" onMouseExited="#onHoverExitArenaSettings" text="Arena Settings">
+         <font>
+            <Font name="Cooper Black" size="27.0" />
+         </font></Button>
+      <Button fx:id="startGameButton" layoutX="232.0" layoutY="624.0" mnemonicParsing="false" onAction="#startGame" text="Play Game!" textFill="#23bd0b">
+         <font>
+            <Font name="Matura MT Script Capitals" size="48.0" />
+         </font></Button>
+      <Button fx:id="backToSettingsButton" layoutX="14.0" layoutY="92.0" mnemonicParsing="false" onAction="#displaySettings" text="Back to Settings">
+         <font>
+            <Font name="Cooper Black" size="17.0" />
+         </font></Button>
+      <Label fx:id="title" layoutX="442.0" layoutY="31.0" />
+      <Label fx:id="information" alignment="CENTER" contentDisplay="CENTER" layoutX="47.0" layoutY="670.0" prefHeight="18.0" prefWidth="0.0" textAlignment="CENTER" />
+      <TextField fx:id="maxForceNormalPredator" layoutX="51.0" layoutY="323.0" onMouseEntered="#maxForcePredatorInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="maxSpeedNormalPredator" layoutX="51.0" layoutY="284.0" onMouseEntered="#maxSpeedPredatorInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="maxSpeedScaryPredator" layoutX="51.0" layoutY="243.0" onMouseEntered="#maxSpeedScaryPredatorInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="maxForceScaryPredator" layoutX="51.0" layoutY="361.0" onMouseEntered="#maxForceScaryPredatorInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <Button fx:id="applyChangesPredator" layoutX="654.0" layoutY="45.0" mnemonicParsing="false" onAction="#applyChangesToPredators" prefHeight="43.0" prefWidth="270.0" text="Apply changes to predator settings">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="nbOfPredators" layoutX="51.0" layoutY="401.0" onMouseEntered="#numberOfPredatosInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <Rectangle fx:id="infoRectangle" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="200.0" layoutX="55.0" layoutY="738.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="295.0" />
+      <TextField fx:id="time" layoutX="203.0" layoutY="243.0" onMouseEntered="#timeInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="mastSepRadius" layoutX="203.0" layoutY="277.0" onMouseEntered="#mastSeparationInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="numberOfMasts" layoutX="203.0" layoutY="310.0" onMouseEntered="#numberOfMastsInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="springSepRadius" layoutX="203.0" layoutY="343.0" onMouseEntered="#springSeparationInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="numberOfSprings" layoutX="203.0" layoutY="376.0" onMouseEntered="#numberOfSpringsInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="springinessTF" layoutX="203.0" layoutY="409.0" onMouseEntered="#springinessInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <Button fx:id="applyChangesArena" layoutX="657.0" layoutY="88.0" mnemonicParsing="false" onAction="#applyChangesToArena" prefHeight="43.0" prefWidth="263.0" text="Apply changes to arena settings">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="applyChangesBoid" layoutX="657.0" layoutY="136.0" mnemonicParsing="false" onAction="#applyChangesToBoids" prefHeight="43.0" prefWidth="263.0" text="Apply changes to boid settings">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="separationR" layoutX="627.0" layoutY="230.0" onMouseEntered="#separationRadiusInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="cohesionR" layoutX="627.0" layoutY="272.0" onMouseEntered="#cohesionRadiusInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="alignmentR" layoutX="627.0" layoutY="311.0" onMouseEntered="#alignmentRadiusInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="predatorR" layoutX="627.0" layoutY="349.0" onMouseEntered="#predatorRadiusInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="playerR" layoutX="627.0" layoutY="389.0" onMouseEntered="#playerRadiusInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="separationF" layoutX="627.0" layoutY="427.0" onMouseEntered="#separationForceInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="cohesionF" layoutX="627.0" layoutY="468.0" onMouseEntered="#cohesionForceInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="alignmentF" layoutX="627.0" layoutY="509.0" onMouseEntered="#alignmentForceInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="predatorF" layoutX="627.0" layoutY="552.0" onMouseEntered="#predatorForceInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="playerF" layoutX="627.0" layoutY="588.0" onMouseEntered="#playerForceInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="maxSpeedBoid" layoutX="627.0" layoutY="626.0" onMouseEntered="#maxSpeedBoidInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="maxForceBoid" layoutX="627.0" layoutY="658.0" onMouseEntered="#maxForceBoidInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="numberOfBoids" layoutX="627.0" layoutY="698.0" onMouseEntered="#numberOfBoidInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <CheckBox fx:id="differentMassesCheck" layoutX="657.0" layoutY="738.0" mnemonicParsing="false" onMouseEntered="#differentMassInfo" onMouseExited="#hideInformation" prefHeight="18.0" prefWidth="18.0" />
+      <CheckBox fx:id="P1Plays" layoutX="810.0" layoutY="234.0" mnemonicParsing="false" onMouseEntered="#player1PlayInfo" onMouseExited="#hideInformation" />
+      <CheckBox fx:id="P2Plays" layoutX="810.0" layoutY="260.0" mnemonicParsing="false" onMouseEntered="#player2PlayInfo" onMouseExited="#hideInformation" />
+      <CheckBox fx:id="P3Plays" layoutX="810.0" layoutY="289.0" mnemonicParsing="false" onMouseEntered="#player3PlayInfo" onMouseExited="#hideInformation" />
+      <CheckBox fx:id="P4Plays" layoutX="810.0" layoutY="315.0" mnemonicParsing="false" onMouseEntered="#player4PlayInfo" onMouseExited="#hideInformation" />
+      <Button fx:id="applyChangesPlayer" layoutX="657.0" layoutY="172.0" mnemonicParsing="false" onAction="#applyChangesToPlayer" prefHeight="43.0" prefWidth="263.0" text="Apply changes to player settings">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="frictionTF" layoutX="767.0" layoutY="348.0" onMouseEntered="#frictionInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <TextField fx:id="gravityTF" layoutX="767.0" layoutY="388.0" onMouseEntered="#gravityInfo" onMouseExited="#hideInformation" prefHeight="26.0" prefWidth="102.0" />
+      <Label fx:id="moreInformation" alignment="CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="870.0" prefHeight="18.0" prefWidth="800.0" text="Label" textAlignment="CENTER" />
+      <Label fx:id="moreExtraInformation" alignment="CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="906.0" prefHeight="18.0" prefWidth="800.0" text="Label" textAlignment="CENTER" />
+      <Label fx:id="player1Key" layoutX="813.0" layoutY="486.0" onMouseEntered="#playerSwingInfo" onMouseExited="#hideInformation" />
+      <Label fx:id="player2Key" layoutX="796.0" layoutY="473.0" onMouseEntered="#playerSwingInfo" onMouseExited="#hideInformation" />
+      <Label fx:id="player3Key" layoutX="804.0" layoutY="432.0" onMouseEntered="#playerSwingInfo" onMouseExited="#hideInformation" />
+      <Label fx:id="player4Key" layoutX="841.0" layoutY="570.0" onMouseEntered="#playerSwingInfo" onMouseExited="#hideInformation" />
+      <Button fx:id="nextPageHowToPlay" layoutX="865.0" layoutY="954.0" mnemonicParsing="false" onAction="#displayHowToPlayPage2" text="Next Page">
+         <font>
+            <Font name="Cooper Black" size="17.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

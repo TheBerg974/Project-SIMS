@@ -5,14 +5,11 @@
  */
 package FourierSeriesEpicycles;
 
-import FourierSeriesEpicycles.DiscreteFourierTransform;
-import FourierSeriesEpicycles.Epicycle;
-import FourierSeriesEpicycles.Point;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -36,12 +33,20 @@ public class CanvasPane extends Pane {
     private boolean paused = true;
     private Button back;
 
+    /**
+     * This method is called when the Pane is created
+     */
     public CanvasPane() {
+        //initializing the pane
         initializePane();
+        
+        //Starts drawing when mouse is clicked 
         setOnMouseClicked(e -> {
             clicked = !clicked;
             clear(gc);
             paused = false;
+            
+            //Starts the discrete fourier transform on the set of drawn points
             if (!clicked) {
                 clear(gc);
                 paused = true;
@@ -54,20 +59,24 @@ public class CanvasPane extends Pane {
                 loop();
             }
         });
-
+        
+        //Draws points where the mouse is 
         setOnMouseMoved(e -> {
             if (clicked) {
                 double posX = e.getX();
                 double posY = e.getY();
                 gc.setFill(Color.WHITE);
                 gc.fillOval(posX - 1, posY - 1, 2, 2);
-                points.add(new Point(posX - 475, posY - 400));
+                Point newPoint = new Point(posX - 475, posY - 400);
+                points.add(newPoint);
             }
         });
 
     }
 
-    //Loop for calculating phasors position
+    /**
+     * Loop for the the epicycle animation
+     */
     private void loop() {
         executor.execute(() -> {
             double initialTime = System.nanoTime();
@@ -88,7 +97,10 @@ public class CanvasPane extends Pane {
             clear(gc);
         });
     }
-
+    
+    /**
+     * Draws the points according to the last epicycles phase
+     */
     private void drawPoints() {
         Epicycle epi = epicycles.get(epicycles.size() - 1);
         Point point = new Point(epi.getPhasorX(), epi.getPhasorY());
@@ -103,7 +115,11 @@ public class CanvasPane extends Pane {
         }
 
     }
-
+    
+    /**
+     * Draws all the Epicycle of the DFT
+     * @param dt the sampling frequency to rotate the phases of the epicycles
+     */
     public void drawEpicycles(double dt) {
 
         for (int i = 0; i < epicycles.size(); i++) {
@@ -116,7 +132,11 @@ public class CanvasPane extends Pane {
         }
     }
 
-    private void computeEpicyclePositions(ArrayList<Epicycle> epicycles) {
+    /**
+     * Computes all the position of the epicycles
+     * @param epicycles the List of Epicycles
+     */
+    private void computeEpicyclePositions(List<Epicycle> epicycles) {
         for (int i = 1; i < epicycles.size(); i++) {
             Epicycle previousEpi = epicycles.get(i - 1);
             Epicycle currentEpi = epicycles.get(i);
@@ -124,6 +144,9 @@ public class CanvasPane extends Pane {
         }
     }
 
+    /**
+     * Method to initialize all the setting of the pane
+     */
     private void initializePane() {
         this.setStyle("-fx-background-color: black;");
         canvas = new Canvas(950, 800);
@@ -131,13 +154,20 @@ public class CanvasPane extends Pane {
         points = new ArrayList<>();
         path = new ArrayList<>();
         executor = Executors.newSingleThreadExecutor();
-        back = initializeButton(900, 750, "Back");
+        back = initializeButton(900, 300, "Back");
         back.setOnAction((ActionEvent e) -> {
             FourierSeries.changePane(new EpicyclePane(), 950, 500);
         });
         this.getChildren().addAll(canvas, back);
     }
-
+    
+    /**
+     * Initialize a button at a given position
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param s The message displayed on the button
+     * @return the initialized button
+     */
     private Button initializeButton(double x, double y, String s) {
         Button button = new Button(s);
         button.setScaleX(2);
@@ -147,6 +177,10 @@ public class CanvasPane extends Pane {
         return button;
     }
 
+    /**
+     * Clear the pane of all graphics context
+     * @param gc the graphics context
+     */
     private void clear(GraphicsContext gc) {
         gc.clearRect(0, 0, 950, 800);
     }
