@@ -15,12 +15,13 @@ import javafx.scene.layout.AnchorPane;
  * @author Frankie
  */
 public class SimulationPhysics {
-
+    //Time value when simulation begins
+    long initialTime = System.nanoTime();
     /**
      * Gravitational Constant, also known as 'G', in Newton's Law of
      * Gravitation, with a scalar to make objects move faster
      */
-    static final double UNIV_GRAV_CONSTANT = 6.64 * 10000;
+    static final double UNIV_GRAV_CONSTANT = 6.67 * 10000;
 
     /**
      * This method applies Newton's law based on the interactions between two
@@ -53,9 +54,6 @@ public class SimulationPhysics {
         return sigmaGrav;
     }
     
-    //Time value when simulation begins
-    long initialTime = System.nanoTime();
-    
     /**
      * This method is used to implement the 
      * @param instantTime
@@ -70,7 +68,7 @@ public class SimulationPhysics {
      */
     public static void startSimulation(long instantTime, ArrayList<CelestialBody> cbArrayList, ArrayList<Node> removeNodeList, ArrayList<CelestialBody> deadList, AnchorPane UI, ArrayList<Vector2D> gravForcesList, double currentTime, double deltaTime, double previousTimeStep) {
 
-        if (cbArrayList.size() >= 2) {
+        if (cbArrayList.size() == 2) {
             Vector2D gravitationalForce = newtonsLaw(cbArrayList.get(0), cbArrayList.get(1));
             
             for (int i = 0; i < cbArrayList.size(); i++) {
@@ -128,7 +126,9 @@ public class SimulationPhysics {
     public static void handleCollisions(CelestialBody body1, CelestialBody body2, ArrayList<Node> removeNodeList, ArrayList<CelestialBody> deadList) { //remove static?
         double massRatio = (body1.getMass() / body2.getMass());
         double massRatio2 = (body2.getMass() / body1.getMass());
-
+        if(FXMLDocumentController.michaelBayModeEnabled) {
+            //play explosion gif
+        }
         if ((massRatio > 0.5) && (massRatio <= 1) || (massRatio2 > 0.5) && (massRatio2 <= 1)) { //if 1st body is larger or equal to 50% of the other body's mass, they both annihilate
             removeNodeList.add(body1);
             deadList.add(body1);

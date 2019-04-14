@@ -33,30 +33,49 @@ public class AssetManager {
     private static ImagePattern moonImage;
 
     private static ImagePattern marsImage;
+    
+    private static ImagePattern asteroidImage;
+    
+    private static ImagePattern michaelBayExplosionImage;
+    
+    private static ImagePattern michaelBayPointingImage;
+    
+    private static ImagePattern michaelBayGangsterImage;
 
     private static Image background;
+    
+    private static Image collisionGif;
+    
+    private static Image runAwayGif;
 
     private static String fileURL(String relativePath) {
         return new File(relativePath).toURI().toString();
     }
-
+    /**
+     * Loads all of the assets needed for this program to look presentable
+     */
     public static void preloadAllAssets() {
         background = new Image(fileURL("./assets/gifs/background.gif"));
 
         backgroundGif = new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT));
-        System.out.println("ree");
+        
+        //Michael Bay Mode gifs
+        collisionGif = new Image(fileURL("./assets/gifs/collision.gif"));        
+        runAwayGif = new Image(fileURL("./assets/gifs/run_away.gif"));
+        
+        //Regular Simulation Images        
         earthImage = new ImagePattern(new Image(fileURL("./assets/images/earth.png")));
-
         neptuneImage = new ImagePattern(new Image(fileURL("./assets/images/neptune.png")));
-
-        sunImage = new ImagePattern(new Image(fileURL("./assets/images/sun.png")));
-        
+        sunImage = new ImagePattern(new Image(fileURL("./assets/images/sun.png")));    
         starImage = new ImagePattern(new Image(fileURL("./assets/images/star.png")));
-
-        marsImage = new ImagePattern(new Image(fileURL("./assets/images/mars.png")));
+        marsImage = new ImagePattern(new Image(fileURL("./assets/images/mars.png")));   
+        moonImage = new ImagePattern(new Image(fileURL("./assets/images/moon.png")));        
+        asteroidImage = new ImagePattern(new Image(fileURL("./assets/images/asteroid.png")));
         
-        moonImage = new ImagePattern(new Image(fileURL("./assets/images/moon.png")));
-        System.out.println("nooo");
+        //Michael Bay mode images
+        michaelBayExplosionImage = new ImagePattern(new Image(fileURL("./assets/images/bay_explosion.png")));        
+        michaelBayPointingImage = new ImagePattern(new Image(fileURL("./assets/images/bay_pointing.png")));        
+        michaelBayGangsterImage = new ImagePattern(new Image(fileURL("./assets/images/bay_gangster.png")));
     }
 
     public static Background getBackgroundImage() {
@@ -86,6 +105,10 @@ public class AssetManager {
 
     public static ImagePattern getMarsImage() {
         return marsImage;
+    }
+
+    public static ImagePattern getAsteroidImage() {
+        return asteroidImage;
     }
 
 }

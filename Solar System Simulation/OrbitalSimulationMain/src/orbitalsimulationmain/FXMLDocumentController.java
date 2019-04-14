@@ -26,6 +26,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -33,21 +34,31 @@ import javafx.stage.Stage;
  * @author cstuser
  */
 public class FXMLDocumentController implements Initializable {
+    
+    
+    Font MICHAEL_BAY_MODE = new Font("Rockwell Extra Bold", 14);
+    Font simulationFont = new Font("Times new Roman", 12);
 
     ArrayList<CheckBox> objectArrayList = new ArrayList<>();
     ArrayList<CheckBox> presetArrayList = new ArrayList<>();
+    
     ArrayList<TextField> textfieldArrayList = new ArrayList<>();
 
     ArrayList<CelestialBody> cbArrayList = new ArrayList<>();
     ArrayList<CelestialBody> deadList = new ArrayList<>();
-    
+
     ArrayList<Node> removeNodeList = new ArrayList<>();
-    
+
     ArrayList<Vector2D> gravForcesList = new ArrayList<>();
+    
+    ArrayList<Label> labelList = new ArrayList<>();
 
     //Variable to determine if a check box was selected or not
     boolean selected = false;
     boolean presetSelected = false;
+    
+    //Checks if user selected Michael Bay mode or not
+    static boolean michaelBayModeEnabled = false;
 
     //The following variables are used in the initialize method
     private double mass = 0;
@@ -136,7 +147,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleMouseClickAction(MouseEvent me) {
         try {
-            //if (cbArrayList.size() < 2) {
+            if (cbArrayList.size() < 2) {
                 CelestialBody cb = new CelestialBody(new Vector2D(velocityX, velocityY), mass, radius, new Vector2D(me.getSceneX(), me.getSceneY()));
                 //If one of 3 preset checkboxes were NOT selected, then the objectType variable can only have 3 choices, based on what object type checkbox the user selects
                 if (!presetSelected) {
@@ -145,10 +156,10 @@ public class FXMLDocumentController implements Initializable {
                             cb.setFill(AssetManager.getNeptuneImage());
                             break;
                         case "star":
-                            cb.setFill(AssetManager.getStarImage()); 
+                            cb.setFill(AssetManager.getStarImage());
                             break;
                         case "asteroid":
-                            cb.setFill(AssetManager.getMoonImage()); //GET ASTEROID IMAGE
+                            cb.setFill(AssetManager.getAsteroidImage());
                             break;
                     }
                 } else if (presetSelected) {
@@ -160,14 +171,14 @@ public class FXMLDocumentController implements Initializable {
                             cb.setFill(AssetManager.getSunImage());
                             break;
                         case "phi":
-                            cb.setFill(AssetManager.getStarImage()); 
+                            cb.setFill(AssetManager.getStarImage());
                             break;
                     }
                 }
                 cb.toBack();
                 cbArrayList.add(cb);
                 addToPane(cb);
-            //}
+            }
         } catch (NullPointerException npe) {
             Stage popUpWindow = new Stage();
             popUpWindow.setHeight(300);
@@ -318,7 +329,7 @@ public class FXMLDocumentController implements Initializable {
 
         //Creates a background size to input into the getBackgroundImage method
         Background background = AssetManager.getBackgroundImage();
-        
+
         //set background gif
         UI.setBackground(background);
 
@@ -341,10 +352,27 @@ public class FXMLDocumentController implements Initializable {
         //Adds all the textfields to an ArrayList so they can be easily dealt with
         textfieldArrayList.add(textFieldMass);
         textfieldArrayList.add(textFieldRadius);
-
+        
+//        labelList.add(labelMass);
+//        labelList.add(labelRadius);
+//        labelList.add(labelVelocityX);
+//        labelList.add(labelVelocityY);
+//        labelList.add(labelChooseObject);
+//        labelList.add(labelChoosePreset);
+//        labelList.add(labelPlanet);
+//        labelList.add(labelAsteroid);
+//        labelList.add(labelEarth);
+//        labelList.add(labelSun);
+//        labelList.add(labelPhiOrionis);
+//        labelList.add(labelpopUpInfo);
+//        
+//        for(Label l: labelList) {
+//            l.setFont(simulationFont);
+//        }
+        
         //Time value when simulation begins
         long initialTime = System.nanoTime();
-        
+
         new AnimationTimer() {
             @Override
             public void handle(long instantTime) {
@@ -352,7 +380,7 @@ public class FXMLDocumentController implements Initializable {
                 double currentTime = (instantTime - initialTime) / 1000000000.0;
                 double deltaTime = currentTime - previousTimeStep;
                 previousTimeStep = currentTime;
-                SimulationPhysics.startSimulation(instantTime,cbArrayList,removeNodeList,deadList, UI, gravForcesList, currentTime, deltaTime, previousTimeStep);
+                SimulationPhysics.startSimulation(instantTime, cbArrayList, removeNodeList, deadList, UI, gravForcesList, currentTime, deltaTime, previousTimeStep);
             }
         }.start();
     }
@@ -395,5 +423,4 @@ public class FXMLDocumentController implements Initializable {
 6) ADD A GIF TO BACKGROUND (REEEEE)
 11) (PUT IN TUTORIAL MODE) MAKE SURE TO ADD INSTRUCTIONS TO THE GUI. FILL IN TEXTFIELDS, CLICK ON OBJECT/PRESET TYPE, CLICK GREEN BUTTON, THEN PUT ON GUI.
 13) CLEAN UP CODE!!!
-15) (SEMI DONE, MAKE BETTER CODE!) BE ABLE TO ADD MORE ASTEROIDS!
  */
