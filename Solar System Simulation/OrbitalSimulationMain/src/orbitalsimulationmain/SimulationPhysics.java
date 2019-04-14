@@ -38,7 +38,6 @@ public class SimulationPhysics {
         double angle = Math.atan2(distanceY, distanceX); 
         double vectorMagnitude = (UNIV_GRAV_CONSTANT * firstBody.getMass() * otherBody.getMass()) / (Math.pow(distanceTotal, 2) * otherBody.getMass()); //Gm1m2/r^2 * m1
         Vector2D gravAccel = new Vector2D(vectorMagnitude * Math.cos(angle), vectorMagnitude * Math.sin(angle));
-        System.out.println(gravAccel.getX());
         return gravAccel;
     }
     

@@ -142,7 +142,6 @@ public class MainMenuDocumentController implements Initializable {
 				stage.setResizable(false);
 				stage.show();
 
-				System.out.println("Bay Mode-true");
 
 			} else if (!FXMLDocumentController.michaelBayModeEnabled) {
 				buttonMichaelBayMode.setStyle("-fx-background-color: #FFA500; ");
@@ -150,7 +149,6 @@ public class MainMenuDocumentController implements Initializable {
 
 				labelMainMenu.setText("Choose what scenario you prefer");
 
-				System.out.println("Bay mdoe false");
 			}
 		} catch (IOException ex) {
 			Logger.getLogger(MainMenuDocumentController.class.getName()).log(Level.SEVERE, null, ex);

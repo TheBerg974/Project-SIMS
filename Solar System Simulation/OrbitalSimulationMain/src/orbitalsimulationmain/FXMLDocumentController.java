@@ -351,12 +351,6 @@ public class FXMLDocumentController implements Initializable {
 
 		//Preloads all assets for project
 		AssetManager.preloadAllAssets();
-//
-//		//Creates a background size to input into the getBackgroundImage method
-//		Background background = AssetManager.getBackgroundImage();
-//
-//		//set background gif
-//		UI.setBackground(background);
 
 		//fills in button color
 		buttonCreateObject.setStyle("-fx-background-color: #00ff00; ");
@@ -378,22 +372,6 @@ public class FXMLDocumentController implements Initializable {
 		textfieldArrayList.add(textFieldMass);
 		textfieldArrayList.add(textFieldRadius);
 
-//        labelList.add(labelMass);
-//        labelList.add(labelRadius);
-//        labelList.add(labelVelocityX);
-//        labelList.add(labelVelocityY);
-//        labelList.add(labelChooseObject);
-//        labelList.add(labelChoosePreset);
-//        labelList.add(labelPlanet);
-//        labelList.add(labelAsteroid);
-//        labelList.add(labelEarth);
-//        labelList.add(labelSun);
-//        labelList.add(labelPhiOrionis);
-//        labelList.add(labelpopUpInfo);
-//        
-//        for(Label l: labelList) {
-//            l.setFont(simulationFont);
-//        }
 		//Time value when simulation begins
 		long initialTime = System.nanoTime();
 
