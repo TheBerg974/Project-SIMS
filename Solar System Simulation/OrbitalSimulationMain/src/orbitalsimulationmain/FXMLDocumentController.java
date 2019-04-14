@@ -351,12 +351,12 @@ public class FXMLDocumentController implements Initializable {
 
 		//Preloads all assets for project
 		AssetManager.preloadAllAssets();
-
-		//Creates a background size to input into the getBackgroundImage method
-		Background background = AssetManager.getBackgroundImage();
-
-		//set background gif
-		UI.setBackground(background);
+//
+//		//Creates a background size to input into the getBackgroundImage method
+//		Background background = AssetManager.getBackgroundImage();
+//
+//		//set background gif
+//		UI.setBackground(background);
 
 		//fills in button color
 		buttonCreateObject.setStyle("-fx-background-color: #00ff00; ");
