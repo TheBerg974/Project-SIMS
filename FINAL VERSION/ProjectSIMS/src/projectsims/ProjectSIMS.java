@@ -33,7 +33,7 @@ public class ProjectSIMS extends Application {
         
         scene = new Scene(root, 500, 500);
         
-        window.setTitle("FOURIER SERIES DEMONSTRATION");
+        window.setTitle("PROJECT SIMS");
         window.setScene(scene);
         window.show();
 
