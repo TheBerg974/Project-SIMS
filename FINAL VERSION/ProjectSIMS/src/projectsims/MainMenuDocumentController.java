@@ -109,49 +109,7 @@ public class MainMenuDocumentController implements Initializable {
 
 	@FXML
 	public void handleButtonMichaelBayModeAction(ActionEvent ae) {
-		try {
-			FXMLDocumentControllerSolar.michaelBayModeEnabled = !FXMLDocumentControllerSolar.michaelBayModeEnabled;
-			if (FXMLDocumentControllerSolar.michaelBayModeEnabled) {
-				//Sets a special font and button image if Michael Bay Mode is enabled
-				buttonMichaelBayMode.setBackground(AssetManagerSolar.getUsaBackground());
-
-				//Changes text of enable michael bay mode button
-				Label labelBayModeYes = new Label();
-				labelBayModeYes.setFont(MICHAEL_BAY_MODE);
-				labelBayModeYes.setText("MICHAEL BAY MODE ENABLED");
-				buttonMichaelBayMode.setText(labelBayModeYes.getText());
-				buttonMichaelBayMode.setFont(MICHAEL_BAY_MODE);
-
-				//Changes text of main menu label
-				labelMainMenu.setText(labelBayModeYes.getText());
-				labelMainMenu.setFont(MICHAEL_BAY_MODE);
-
-//				//Sets leftmost image view
-//				leftImage.setImage(AssetManagerSolar.getMichaelBayPointingImage());
-//				//Sets rightmost image view
-//				rightImage.setImage(AssetManagerSolar.getRunAwayGif());
-				//Loads Michael Bay mode window
-				Parent root = FXMLLoader.load(getClass().getResource("MichaelBayMode.fxml"));
-				Stage stage = new Stage();
-				Scene scene = new Scene(root);
-
-				stage.setScene(scene);
-				stage.setTitle("MICHAEL BAY MODE!!!");
-				scene.getRoot().requestFocus();
-				stage.setResizable(false);
-				stage.show();
-
-
-			} else if (!FXMLDocumentControllerSolar.michaelBayModeEnabled) {
-				buttonMichaelBayMode.setStyle("-fx-background-color: #FFA500; ");
-				buttonMichaelBayMode.setText("Enable Michael Bay Mode");
-
-				labelMainMenu.setText("Choose what scenario you prefer");
-
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(MainMenuDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		ProjectSIMS.changePane(new MainMenuPane(), 500, 500);
 	}
 
 	/**
@@ -160,7 +118,6 @@ public class MainMenuDocumentController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		AssetManagerSolar.preloadAllAssets();
-		buttonMichaelBayMode.setText("Enable Michael Bay Mode");
 		//buttonMichaelBayMode.setStyle("-fx-background-color: #FFA500; ");	
 
 		Label label = new Label();

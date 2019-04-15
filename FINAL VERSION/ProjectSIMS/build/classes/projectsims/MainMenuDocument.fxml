@@ -11,7 +11,7 @@
       <Button fx:id="buttonBlankScenario" layoutX="81.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonBlankScenarioAction" text="Blank scenario" />
       <Button fx:id="buttonEarthMoon" layoutX="228.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonEarthMoonAction" text="Earth-Moon simulation" />
       <Button fx:id="buttonEarthSun" layoutX="429.0" layoutY="209.0" mnemonicParsing="false" onAction="#handleButtonEarthSunAction" text="Earth-Sun simulation" />
-      <Button fx:id="buttonMichaelBayMode" layoutX="175.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleButtonMichaelBayModeAction" prefHeight="30.0" prefWidth="250.0" text="Enable Michael Bay Mode" />
+      <Button fx:id="buttonMichaelBayMode" layoutX="175.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleButtonMichaelBayModeAction" prefHeight="30.0" prefWidth="250.0" text="Back to Menu" />
       <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="420.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true" />
    </children>
